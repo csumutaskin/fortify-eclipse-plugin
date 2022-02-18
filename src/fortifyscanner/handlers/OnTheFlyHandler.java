@@ -1,37 +1,62 @@
 package fortifyscanner.handlers;
 
 import java.io.IOException;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.console.ConsolePlugin;
-import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IConsoleListener;
-import org.eclipse.ui.console.IPatternMatchListener;
-import org.eclipse.ui.console.PatternMatchEvent;
-import org.eclipse.ui.console.TextConsole;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
 
-public class OnTheFlyHandler extends AbstractHandler implements IConsoleListener, IPatternMatchListener {
+import components.ProjectListDialog;
 
-	private String pattern;
-	private int matchCount = 0;
-	
+public class OnTheFlyHandler extends AbstractHandler {
+
 	public OnTheFlyHandler() {
-		pattern = "\\d+";
-		matchCount = 0;
-		ConsolePlugin.getDefault().getConsoleManager().addConsoleListener(this);
+		//ConsolePlugin.getDefault().getConsoleManager().addConsoleListener(this);
 	}	
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		command();
-		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-		MessageDialog.openInformation(window.getShell(), "FortifyScanner", this.matchCount + " matches found");
+		//command();
+		
+		openDialog();
+		
+		
+//		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+//		MessageDialog.openInformation(window.getShell(), "FortifyScanner", this.matchCount + " matches found");
 		return null;
+	}
+	
+	private void openDialog() {
+
+        List<Entry<String,String>> projectList = new ArrayList<>();
+
+        //Project list will be extracted and put to the list...
+        projectList.add(new SimpleEntry<String,String>("D:/dev/workspace/sample", "Sample"));
+        projectList.add(new SimpleEntry<String,String>("D:/dev/workspace/sample2", "Sample2"));
+
+        String title = "Choose a Project:";
+        String explanation = " Chosen project will be scanned by the Fortify SCA and issues will be logged to the console.";
+        ProjectListDialog myDialog = new ProjectListDialog(new Shell(), title, explanation, projectList, IMessageProvider.INFORMATION);
+        int returnValue = myDialog.open();
+
+        switch (returnValue) {
+        case Window.OK:
+            System.out.println("OK: " +  myDialog.getSelectedButton());
+            break;
+        case Window.CANCEL:
+            System.out.println("CANCEL");
+            break;
+        default:
+            System.out.println("Unexpected..");
+            break;
+        }
 	}
 	
 	private void command() {
@@ -46,60 +71,5 @@ public class OnTheFlyHandler extends AbstractHandler implements IConsoleListener
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void consolesAdded(IConsole[] consoles) {
-		for (IConsole console : consoles) {
-			if (console instanceof TextConsole) {
-				((TextConsole) console).addPatternMatchListener(this);
-			}
-		}
-
-	}
-
-	@Override
-	public void consolesRemoved(IConsole[] consoles) {
-		for(IConsole console : consoles) {
-			if(console instanceof TextConsole) {
-				((TextConsole) console).removePatternMatchListener(this);
-			}
-		}
-
-	}
-
-	@Override
-	public void connect(TextConsole arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void disconnect() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void matchFound(PatternMatchEvent arg0) {
-		this.matchCount++;
-		
-	}
-
-	@Override
-	public int getCompilerFlags() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public String getLineQualifier() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getPattern() {
-		return pattern;
 	}
 }
