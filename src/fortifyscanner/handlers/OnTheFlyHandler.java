@@ -13,10 +13,6 @@ import java.util.logging.Logger;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -30,6 +26,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import components.ProjectListDialog;
 import components.RenameableMessageConsole;
 import model.ProjectDTO;
+import util.FortifyScanUtils;
+import util.WorkspaceUtils;
 
 public class OnTheFlyHandler extends AbstractHandler {
 	
@@ -48,7 +46,7 @@ public class OnTheFlyHandler extends AbstractHandler {
 	
 	private void triggerWizard(ExecutionEvent event) {
 		try {
-			getAllWorkspaceProjects(event);
+			allWorkspaceProjects = WorkspaceUtils.getAllProjectSummaryInfoInCurrentWorkspace();
 			int responseCode = openChooseProjectDialog();
 			if(responseCode == Window.OK) {// User hit ok button
 				logConsoleScanHasStarted();
@@ -65,23 +63,11 @@ public class OnTheFlyHandler extends AbstractHandler {
 		
 	}
 	
-	// Detects all workspace projects with project name and full path on os drive information...
-	private void getAllWorkspaceProjects(ExecutionEvent event) {
-		allWorkspaceProjects = new ArrayList<ProjectDTO>();
-	    IWorkspace workspace = ResourcesPlugin.getWorkspace();
-	    IWorkspaceRoot root = workspace.getRoot();
-	    IProject[] projects = root.getProjects();
-	    String workspacePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString();
-	    for (IProject project : projects) {	    	
-	    	allWorkspaceProjects.add(new ProjectDTO(project.getName(), workspacePath + "/" + project.getName()));
-	    }
-	}
-	
 	private int openChooseProjectDialog() throws IOException {
 		int responseCode = -1; 
         String title = "Choose a Project:";
         String explanation = " Chosen project will be scanned in another Background Operating System Process by the Fortify SCA and issues will be logged to the console."
-        		+ "You will be informed when this process is completed";
+        		+ System.lineSeparator() + "You will be informed when this process is completed" + System.lineSeparator();
         
         List<Entry<String,String>> projectList = new ArrayList<>();
         for(ProjectDTO projectDTO: allWorkspaceProjects) {
@@ -94,7 +80,8 @@ public class OnTheFlyHandler extends AbstractHandler {
         switch (returnValue) {
         case Window.OK:
             System.out.println("OK: " +  projectsDialog.getSelectedButton());
-            String runFortifyScanOnPath = runFortifyScanOnPath(projectsDialog.getSelectedButton());
+            //String runFortifyScanOnPath = runFortifyScanOnPath(projectsDialog.getSelectedButton());
+            String runFortifyScanOnPath = FortifyScanUtils.scanOnTheFly(projectsDialog.getSelectedButton());
             System.out.println(runFortifyScanOnPath);
             printToEclipseConsole(runFortifyScanOnPath);
             responseCode = Window.OK;
@@ -120,36 +107,7 @@ public class OnTheFlyHandler extends AbstractHandler {
 		}
 		MessageDialog.openInformation(window.getShell(), "On-the-fly Report", "FortifyScanner issues are logged to the console.");
 	}
-	
-	private String runFortifyScanOnPath(String path) throws IOException {
 		
-		StringBuilder resultLog = new StringBuilder();
-		String command = "sourceanalyzer " + path + " -scan";
-		LOGGER.info("SourceAnalyzer command is: " + command);
-		BufferedReader bufferedReader = null;
-		InputStreamReader inputStreamReader = null;
-		try {
-			Process process = Runtime.getRuntime().exec(command);
-			inputStreamReader = new InputStreamReader(process.getInputStream());
-			bufferedReader = new BufferedReader(inputStreamReader);
-			String line = "";
-			while ((line = bufferedReader.readLine()) != null) {
-				resultLog.append(line).append(System.lineSeparator());			    
-			}
-		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Exception Running Source Analyzer on OS Command level:  ", e);
-			e.printStackTrace();
-		} finally {
-			if(inputStreamReader != null) {
-				inputStreamReader.close();
-			}
-			if(bufferedReader != null) {
-				bufferedReader.close();
-			}
-		}
-		return resultLog.toString();
-	}
-	
 	private void printToEclipseConsole(String toPrint) {
 		RenameableMessageConsole console = new RenameableMessageConsole("Fortify SCA On The Fly Report", null);
 		console.setConsoleName("FORTIFY REPORT");
