@@ -1,8 +1,6 @@
 package fortifyscanner.handlers;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +16,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.console.ConsolePlugin;
-import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import components.ProjectListDialog;
-import components.RenameableMessageConsole;
 import model.ProjectDTO;
+import util.ConsoleUtils;
 import util.FortifyScanUtils;
 import util.WorkspaceUtils;
 
@@ -81,9 +76,11 @@ public class OnTheFlyHandler extends AbstractHandler {
         case Window.OK:
             System.out.println("OK: " +  projectsDialog.getSelectedButton());
             //String runFortifyScanOnPath = runFortifyScanOnPath(projectsDialog.getSelectedButton());
+            ConsoleUtils.printMessageToConsoleWithNameConsole("... Fortify Static Code Analyzer started, please wait for the result ...");
             String runFortifyScanOnPath = FortifyScanUtils.scanOnTheFly(projectsDialog.getSelectedButton());
             System.out.println(runFortifyScanOnPath);
-            printToEclipseConsole(runFortifyScanOnPath);
+            //printToEclipseConsole(runFortifyScanOnPath);
+            ConsoleUtils.printMessageToConsoleWithNameConsole(runFortifyScanOnPath);
             responseCode = Window.OK;
             break;
         case Window.CANCEL:
@@ -108,15 +105,15 @@ public class OnTheFlyHandler extends AbstractHandler {
 		MessageDialog.openInformation(window.getShell(), "On-the-fly Report", "FortifyScanner issues are logged to the console.");
 	}
 		
-	private void printToEclipseConsole(String toPrint) {
-		RenameableMessageConsole console = new RenameableMessageConsole("Fortify SCA On The Fly Report", null);
-		console.setConsoleName("FORTIFY REPORT");
-		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
-		ConsolePlugin.getDefault().getConsoleManager().showConsoleView(console);
-		MessageConsoleStream stream = console.newMessageStream();
-		stream.println(toPrint);
-		stream.println("...Scan completed successfully...");
-	}
+//	private void printToEclipseConsole(String toPrint) {
+//		RenameableMessageConsole console = new RenameableMessageConsole("Fortify SCA On The Fly Report", null);
+//		console.setConsoleName("FORTIFY REPORT");
+//		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
+//		ConsolePlugin.getDefault().getConsoleManager().showConsoleView(console);
+//		MessageConsoleStream stream = console.newMessageStream();
+//		stream.println(toPrint);
+//		stream.println("...Scan completed successfully...");
+//	}
 	
 	private void command() {
 		try {						
