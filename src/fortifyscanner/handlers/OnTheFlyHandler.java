@@ -29,6 +29,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import components.ProjectListDialog;
+import components.RenameableMessageConsole;
 import model.ProjectDTO;
 
 public class OnTheFlyHandler extends AbstractHandler {
@@ -151,7 +152,8 @@ public class OnTheFlyHandler extends AbstractHandler {
 	}
 	
 	private void printToEclipseConsole(String toPrint) {
-		MessageConsole console = new MessageConsole("Fortify SCA On The Fly Report", null);
+		RenameableMessageConsole console = new RenameableMessageConsole("Fortify SCA On The Fly Report", null);
+		console.setConsoleName("FORTIFY REPORT");
 		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
 		ConsolePlugin.getDefault().getConsoleManager().showConsoleView(console);
 		MessageConsoleStream stream = console.newMessageStream();
