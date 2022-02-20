@@ -1,6 +1,6 @@
 package util;
 
-import java.io.IOException;
+import java.io.PrintStream;
 
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
@@ -67,21 +67,11 @@ public class ConsoleUtils {
 	 * @param message string that will be printed.
 	 */
 	public static void printMessageToConsoleWithNameConsole(String message) {
-
-//			IDocument document = currentConsole.getDocument();
-//			document.set(message);
-		MessageConsoleStream stream = currentConsole.newMessageStream();
-		stream.println(message);
-		try {
-			stream.close();
-			Thread.sleep(2000);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		MessageConsoleStream out = currentConsole.newMessageStream();
+		PrintStream printStream = new PrintStream(out, true);
+		printStream.println(message);
+		//out.println(message);
+		//out.setActivateOnWrite(true);		
 	}
 
 	/**

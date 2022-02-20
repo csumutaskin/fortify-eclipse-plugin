@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import model.FortifyScanResultDTO;
+import model.FortifyScanResultDto;
 
 /** 
  * A utility that facilitates fortify scans (using command line command) and mapping results into proper objects.
@@ -64,7 +64,7 @@ public class FortifyScanUtils {
 	 * @param result log that holds all on the fly scan result
 	 * @return mapped result in a DTO object
 	 */
-	public static FortifyScanResultDTO mapOnTheFlyScanToDTO(String result) {
+	public static FortifyScanResultDto mapOnTheFlyScanToDTO(String result) {
 		return null;
 	}
 }

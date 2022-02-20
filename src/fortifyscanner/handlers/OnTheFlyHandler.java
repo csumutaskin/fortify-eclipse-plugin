@@ -19,7 +19,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import components.ProjectListDialog;
-import model.ProjectDTO;
+import model.ProjectDto;
 import util.ConsoleUtils;
 import util.FortifyScanUtils;
 import util.WorkspaceUtils;
@@ -27,7 +27,7 @@ import util.WorkspaceUtils;
 public class OnTheFlyHandler extends AbstractHandler {
 	
 	private static final Logger LOGGER = Logger.getLogger(OnTheFlyHandler.class.getName());
-	private List<ProjectDTO> allWorkspaceProjects;
+	private List<ProjectDto> allWorkspaceProjects;
 
 	public OnTheFlyHandler() {
 	}	
@@ -65,7 +65,7 @@ public class OnTheFlyHandler extends AbstractHandler {
         		+ System.lineSeparator() + "You will be informed when this process is completed" + System.lineSeparator();
         
         List<Entry<String,String>> projectList = new ArrayList<>();
-        for(ProjectDTO projectDTO: allWorkspaceProjects) {
+        for(ProjectDto projectDTO: allWorkspaceProjects) {
         	projectList.add(new SimpleEntry<String,String>(projectDTO.getProjectPath(), projectDTO.getProjectName()));
         }
 

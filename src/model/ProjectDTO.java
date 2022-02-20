@@ -5,15 +5,15 @@ package model;
  * @author Umut
  *
  */
-public class ProjectDTO {
+public class ProjectDto {
 	
 	private String projectName;
 	private String projectPath;
 	
-	public ProjectDTO() {		
+	public ProjectDto() {		
 	}
 	
-	public ProjectDTO(String projectName, String projectPath) {
+	public ProjectDto(String projectName, String projectPath) {
 		super();
 		this.projectName = projectName;
 		this.projectPath = projectPath;

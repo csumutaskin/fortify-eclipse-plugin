@@ -8,7 +8,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 
-import model.ProjectDTO;
+import model.ProjectDto;
 
 /**
  * Contains all operations that are related with current workspace (Where the developer is currently working using eclipse IDE).
@@ -25,15 +25,15 @@ public class WorkspaceUtils {
 	 * 
 	 * @return DTO list for project name and root path information that exist in a particular workspace
 	 */
-	public static List<ProjectDTO> getAllProjectSummaryInfoInCurrentWorkspace() {
+	public static List<ProjectDto> getAllProjectSummaryInfoInCurrentWorkspace() {
 		
-		List<ProjectDTO> allWorkspaceProjects = new ArrayList<ProjectDTO>();
+		List<ProjectDto> allWorkspaceProjects = new ArrayList<ProjectDto>();
 	    IWorkspace workspace = ResourcesPlugin.getWorkspace();
 	    IWorkspaceRoot root = workspace.getRoot();
 	    IProject[] projects = root.getProjects();
 	    String workspacePath = getCurrentWorkspaceOSFullPath();
 	    for (IProject project : projects) {	    	
-	    	allWorkspaceProjects.add(new ProjectDTO(project.getName(), workspacePath + "/" + project.getName()));
+	    	allWorkspaceProjects.add(new ProjectDto(project.getName(), workspacePath + "/" + project.getName()));
 	    }
 	    return allWorkspaceProjects;
 	}

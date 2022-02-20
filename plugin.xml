@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-
-   <extension
-         point="org.eclipse.ui.commands">
+	<!-- Commands 1- Fortify 2- Scan On-the-fly 3- Scan to PDF -->
+   <extension point="org.eclipse.ui.commands">
       <category
             id="FortifyScanner.commands.category"
             name="Fortify">
@@ -19,6 +18,7 @@
             id="FortifyScanner.commands.tofileCommand">
       </command>
    </extension>
+   <!-- Java Class Handlers 1- OnTheFlyHandler 2- FileReportHandler -->
    <extension
          point="org.eclipse.ui.handlers">
       <handler
@@ -30,6 +30,7 @@
             commandId="FortifyScanner.commands.tofileCommand">
       </handler>
    </extension>
+   <!-- Keyboard Bindings 1- Ctrl+6 for ontheflyCommand -->
    <extension
          point="org.eclipse.ui.bindings">
       <key
@@ -39,23 +40,24 @@
             sequence="M1+6">
       </key>
    </extension>
+   <!-- GUI (Custom Added Buttons-Entry Points) 1- MainMenu 2- ToolbarButton -->
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu
-               id="FortifyScanner.menus.sampleMenu"
+               id="FortifyScanner.menus.fortifyMenu"
                label="Fortify"
-               mnemonic="M">
+               mnemonic="F">
             <command
                   commandId="FortifyScanner.commands.ontheflyCommand"
                   id="FortifyScanner.menus.ontheflyCommand"
-                  mnemonic="S">
+                  mnemonic="O">
             </command>
             <command
                   commandId="FortifyScanner.commands.tofileCommand"
                   id="FortifyScanner.menus.tofileCommand"
-                  mnemonic="F">
+                  mnemonic="P">
             </command>
          </menu>
       </menuContribution>
@@ -72,5 +74,49 @@
          </toolbar>
       </menuContribution>
    </extension>
-
+   <!-- GUI (Views) 1- Fortify Console -->
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="FortifyScanner"
+            name="Fortify">
+      </category>
+      <view
+            category="FortifyScanner"
+            class="fortifyscanner.views.FortifyConsoleView"
+            icon="icons/fortify.png"
+            id="fortifyscanner.views.FortifyConsoleView"
+            inject="true"
+            name="Fortify On-the-Fly">
+      </view>
+   </extension>
+   <!-- Eclipse Perspective Additions -->
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jst.j2ee.internal.perspective.J2EEPerspective">
+         <view
+               id="fortifyscanner.views.FortifyConsoleView"
+               ratio="0.5"
+               relationship="right"
+               relative="org.eclipse.ui.views.markers.internal.MarkerView">
+         </view>
+      </perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               id="fortifyscanner.views.FortifyConsoleView"
+               ratio="0.5"
+               relationship="right"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <!-- Contexts -->
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
 </plugin>
