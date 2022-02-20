@@ -3,9 +3,12 @@ package util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import model.FortifyIssueDto;
 import model.FortifyScanResultDto;
 
 /** 
@@ -24,7 +27,10 @@ public class FortifyScanUtils {
 	 * @return scan result hold in a string
 	 * @throws IOException 
 	 */
-	public static String scanOnTheFly(String fullProjectRootPathToScan) throws IOException {
+	public static List<FortifyIssueDto> scanOnTheFly(String fullProjectRootPathToScan) throws IOException {
+		List<FortifyIssueDto> toReturn = new ArrayList<>();
+		StringBuilder completeLog = new StringBuilder();
+		
 		StringBuilder resultLog = new StringBuilder();
 		String command = "sourceanalyzer " + fullProjectRootPathToScan + " -scan";
 		LOGGER.info("SourceAnalyzer command is: " + command);
@@ -34,9 +40,18 @@ public class FortifyScanUtils {
 			Process process = Runtime.getRuntime().exec(command);
 			inputStreamReader = new InputStreamReader(process.getInputStream());
 			bufferedReader = new BufferedReader(inputStreamReader);
+			
 			String line = "";
+			FortifyLineJoinerAndParser fortifyLineJoinerAndParser = null;
+			fortifyLineJoinerAndParser = toParse(null, "");		
+			
 			while ((line = bufferedReader.readLine()) != null) {
-				resultLog.append(line).append(System.lineSeparator());			    
+				
+				fortifyLineJoinerAndParser = toParse(fortifyLineJoinerAndParser.fortifyIssueDto, line);
+				if(fortifyLineJoinerAndParser.complete) {
+					toReturn.add(fortifyLineJoinerAndParser.fortifyIssueDto);				
+				}
+				completeLog.append(line).append(System.lineSeparator());		    
 			}
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Exception Running Source Analyzer on OS Command level:  ", e);
@@ -49,7 +64,38 @@ public class FortifyScanUtils {
 				bufferedReader.close();
 			}
 		}
-		return resultLog.toString();
+		LOGGER.info(completeLog.toString());
+		return toReturn;
+	}
+	
+	public static FortifyLineJoinerAndParser toParse(FortifyIssueDto current, String line) {
+		
+		if(line != null) {
+			line = line.trim();
+		}
+		if(current != null) {
+			if(current.getLocation() != null) {
+				current = null;	
+			} else {
+				current.setLocation(line);
+				return new FortifyLineJoinerAndParser(current, true);
+			}			
+		}
+		
+		if(current == null && line.startsWith("[") && line.endsWith("]")) {
+			String lineToBeParsed = line.substring(1, line.length() - 2);
+			String[] splitted = lineToBeParsed.split(":");
+			if(splitted.length != 5) {
+				return new FortifyLineJoinerAndParser(current, false);
+			}
+			current = new FortifyIssueDto();
+			current.setId(splitted[0]);
+			current.setSeverity(splitted[1]);
+			current.setReason(splitted[2]);
+			current.setDescription(splitted[3]);
+			current.setType(splitted[4]);
+		}
+		return new FortifyLineJoinerAndParser(current, false);
 	}
 	
 	/**
@@ -66,5 +112,32 @@ public class FortifyScanUtils {
 	 */
 	public static FortifyScanResultDto mapOnTheFlyScanToDTO(String result) {
 		return null;
+	}
+	
+	/**
+	 * Scan utility in cmd returns like a result as below:
+	 * 
+	 * --EmptyLine
+	 *[D:/Dev/workspaces/java/runtime-EclipseApplication/Sample/src]
+     * -- EmptyLine
+     *[634D05B33BA856A694F4EF6704F24D0A : low : J2EE Bad Practices : Leftover Debug Code : structural ]
+     *    Sample.java(3)
+     * -- EmptyLine
+     *[48911FA4B2A29DB127F4E341E2AF14F8 : low : Poor Logging Practice : Use of a System Output Stream : structural ]
+     *    Sample.java(5)
+     *
+     * main aim of this class is by using the same reference passed as argument to the constructor to return a
+     * complete set of object (all fields set to the object, and the boolean complete returns as true at that time) 
+     * 
+	 * @author Umut
+	 *
+	 */
+	public static class FortifyLineJoinerAndParser {
+		public FortifyIssueDto fortifyIssueDto;
+		public boolean complete = false;
+		public FortifyLineJoinerAndParser(FortifyIssueDto fortifyIssueDto, boolean complete) {
+			this.complete = complete;
+			this.fortifyIssueDto = fortifyIssueDto;
+		}
 	}
 }

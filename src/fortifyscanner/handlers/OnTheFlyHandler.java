@@ -84,11 +84,11 @@ public class OnTheFlyHandler extends AbstractHandler {
             System.out.println("OK: " +  projectsDialog.getSelectedButton());
             //String runFortifyScanOnPath = runFortifyScanOnPath(projectsDialog.getSelectedButton());
             ConsoleUtils.printMessageToConsoleWithNameConsole("... Fortify Static Code Analyzer started, please wait for the result ...");
-            String runFortifyScanOnPath = FortifyScanUtils.scanOnTheFly(projectsDialog.getSelectedButton());
-            System.out.println(runFortifyScanOnPath);
+            List<FortifyIssueDto> scanned = FortifyScanUtils.scanOnTheFly(projectsDialog.getSelectedButton());
+            
             //printToEclipseConsole(runFortifyScanOnPath);
-            ConsoleUtils.printMessageToConsoleWithNameConsole(runFortifyScanOnPath);
-            sampleFeed();
+            //ConsoleUtils.printMessageToConsoleWithNameConsole(runFortifyScanOnPath);
+            updateFortifyConsoleView(scanned);
             responseCode = Window.OK;
             break;
         case Window.CANCEL:
@@ -102,28 +102,16 @@ public class OnTheFlyHandler extends AbstractHandler {
         return responseCode;
 	}	
 	
-	private void sampleFeed() {
+	private void updateFortifyConsoleView(List<FortifyIssueDto> scanned) {
 		IWorkbenchWindow workbench = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = workbench.getActivePage();
 		try {
 			IViewPart viewPart = page.showView("fortifyscanner.views.FortifyConsoleView");
 			FortifyConsoleView fcv = (FortifyConsoleView)viewPart;
-			
-			FortifyScanResultDto fscanResult = new FortifyScanResultDto();
-			List<FortifyIssueDto> issues = new ArrayList<FortifyIssueDto>();
-			FortifyIssueDto fi = new FortifyIssueDto();
-			fi.setDescription("new description");
-			fi.setId("id");
-			fi.setLocation("mmyyyy location");
-			fi.setReason("rrrrreason");
-			fi.setSeverity("seeeeverity");
-			fi.setType("ttttt");
-			issues.add(fi);
-			fscanResult.setIssues(issues );
-			
-			fcv.feedFortifyConsoleData(fscanResult);
+			FortifyScanResultDto fscanResult = new FortifyScanResultDto();			
+			fscanResult.setIssues(scanned);
+			fcv.refreshFortifyConsoleData(fscanResult);
 		} catch (PartInitException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

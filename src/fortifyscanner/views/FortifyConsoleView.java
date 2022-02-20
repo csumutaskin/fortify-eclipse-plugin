@@ -51,11 +51,11 @@ public class FortifyConsoleView extends ViewPart {
 //		}
 //	}
 	
-	public void feedFortifyConsoleData(FortifyScanResultDto fScanResult) {
+	public void refreshFortifyConsoleData(FortifyScanResultDto fScanResult) {
 		
-		System.out.println(fcr);
-		fcr = fScanResult;
-		viewer.setInput(fcr);		
+//		System.out.println(fcr);
+//		fcr = fScanResult;
+		viewer.setInput(fScanResult);		
 	}
 
 	@Override
@@ -88,8 +88,8 @@ public class FortifyConsoleView extends ViewPart {
 		fi2.setSeverity("Severe2");
 		fi2.setType("type2");
 		
-		fortifyIssues.add(fi);
-		fortifyIssues.add(fi2);
+//		fortifyIssues.add(fi);
+//		fortifyIssues.add(fi2);
 		fcr = new FortifyScanResultDto();
 		fcr.setIssues(fortifyIssues);
 		
