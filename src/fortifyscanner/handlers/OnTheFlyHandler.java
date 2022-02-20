@@ -15,10 +15,17 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import components.ProjectListDialog;
+import fortifyscanner.views.FortifyConsoleView;
+import model.FortifyIssueDto;
+import model.FortifyScanResultDto;
 import model.ProjectDto;
 import util.ConsoleUtils;
 import util.FortifyScanUtils;
@@ -81,6 +88,7 @@ public class OnTheFlyHandler extends AbstractHandler {
             System.out.println(runFortifyScanOnPath);
             //printToEclipseConsole(runFortifyScanOnPath);
             ConsoleUtils.printMessageToConsoleWithNameConsole(runFortifyScanOnPath);
+            sampleFeed();
             responseCode = Window.OK;
             break;
         case Window.CANCEL:
@@ -93,6 +101,32 @@ public class OnTheFlyHandler extends AbstractHandler {
         }
         return responseCode;
 	}	
+	
+	private void sampleFeed() {
+		IWorkbenchWindow workbench = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchPage page = workbench.getActivePage();
+		try {
+			IViewPart viewPart = page.showView("fortifyscanner.views.FortifyConsoleView");
+			FortifyConsoleView fcv = (FortifyConsoleView)viewPart;
+			
+			FortifyScanResultDto fscanResult = new FortifyScanResultDto();
+			List<FortifyIssueDto> issues = new ArrayList<FortifyIssueDto>();
+			FortifyIssueDto fi = new FortifyIssueDto();
+			fi.setDescription("new description");
+			fi.setId("id");
+			fi.setLocation("mmyyyy location");
+			fi.setReason("rrrrreason");
+			fi.setSeverity("seeeeverity");
+			fi.setType("ttttt");
+			issues.add(fi);
+			fscanResult.setIssues(issues );
+			
+			fcv.feedFortifyConsoleData(fscanResult);
+		} catch (PartInitException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	private void openOKPressedDialog(ExecutionEvent event) {
 		IWorkbenchWindow window;

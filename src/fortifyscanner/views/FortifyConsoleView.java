@@ -50,6 +50,13 @@ public class FortifyConsoleView extends ViewPart {
 //			return workbench.getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
 //		}
 //	}
+	
+	public void feedFortifyConsoleData(FortifyScanResultDto fScanResult) {
+		
+		System.out.println(fcr);
+		fcr = fScanResult;
+		viewer.setInput(fcr);		
+	}
 
 	@Override
 	public void createPartControl(Composite parent) {
