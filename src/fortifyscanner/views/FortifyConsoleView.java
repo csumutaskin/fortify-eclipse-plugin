@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
+import fortifyscanner.listener.FortifyIssueDoubleClickListener;
 import model.FortifyIssueDto;
 import model.FortifyScanResultDto;
 
@@ -95,6 +96,7 @@ public class FortifyConsoleView extends ViewPart {
 		
 		viewer.setContentProvider(new FortifyConsoleContentProvider());
 		viewer.setInput(fcr);
+		viewer.addDoubleClickListener(new FortifyIssueDoubleClickListener(viewer));
 		
 //		getSite().setSelectionProvider(viewer);
 //		makeActions();

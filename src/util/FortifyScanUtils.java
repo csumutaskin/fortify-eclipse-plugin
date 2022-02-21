@@ -20,6 +20,7 @@ import model.FortifyScanResultDto;
 public class FortifyScanUtils {
 	
 	private static final Logger LOGGER = Logger.getLogger(FortifyScanUtils.class.getName());
+	public static String PROJECT_ROOT_PATH = null;
 	
 	/**
 	 * Creates an on the fly scan (no file generation, logs of result are kept in a parseable string).
@@ -28,10 +29,9 @@ public class FortifyScanUtils {
 	 * @throws IOException 
 	 */
 	public static List<FortifyIssueDto> scanOnTheFly(String fullProjectRootPathToScan) throws IOException {
+		PROJECT_ROOT_PATH = null;
 		List<FortifyIssueDto> toReturn = new ArrayList<>();
 		StringBuilder completeLog = new StringBuilder();
-		
-		StringBuilder resultLog = new StringBuilder();
 		String command = "sourceanalyzer " + fullProjectRootPathToScan + " -scan";
 		LOGGER.info("SourceAnalyzer command is: " + command);
 		BufferedReader bufferedReader = null;
@@ -83,9 +83,10 @@ public class FortifyScanUtils {
 		}
 		
 		if(current == null && line.startsWith("[") && line.endsWith("]")) {
-			String lineToBeParsed = line.substring(1, line.length() - 2);
+			String lineToBeParsed = line.substring(1, line.length() - 1);
 			String[] splitted = lineToBeParsed.split(":");
 			if(splitted.length != 5) {
+				PROJECT_ROOT_PATH = lineToBeParsed;
 				return new FortifyLineJoinerAndParser(current, false);
 			}
 			current = new FortifyIssueDto();
