@@ -39,10 +39,12 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 		}
 		System.out.println(issue.getDescription());
 		String location = issue.getLocation();
+		String classWithPackagePath = location.split("\\(")[0];
+		System.out.println(classWithPackagePath);
 //		String className = location.split(".")[0];
 
 		
-		String fullPath = FortifyScanUtils.PROJECT_ROOT_PATH + "/" + "Sample.java";
+		String fullPath = FortifyScanUtils.PROJECT_ROOT_PATH + "/" + classWithPackagePath;
 		System.out.println(fullPath);
 		File fileToOpen = new File(fullPath);
 
