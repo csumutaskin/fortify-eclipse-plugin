@@ -65,16 +65,18 @@ public class ProjectListDialog extends TitleAreaDialog {
     
     private void setupRadioButtonGroup(Composite containerForRadioButtons, List<Entry<String, String>> projects) {
         projectRadioButtonList = new ArrayList<>();
-        int ButtonCount = 1;
+        int currentButtonIndex = 1;
+        GridData gd_table = new GridData(SWT.FILL, SWT.TOP, true, false, 2, 100);
+        
         for (Entry<String, String> usrbutton : projects) {
-             Button tmpButton = new Button(containerForRadioButtons, SWT.RADIO);
-             tmpButton.setText(usrbutton.getValue());
+             Button radioButton = new Button(containerForRadioButtons, SWT.RADIO);
+             radioButton.setText(usrbutton.getValue());
  
-             if (ButtonCount == 1) {
-                 tmpButton.setSelection(true); //Make first button be auto-selected. 
-                 ButtonCount++;
+             if (currentButtonIndex == 1) {
+                 radioButton.setSelection(true); //Make first button be auto-selected. 
+                 currentButtonIndex++;
              }
-            projectRadioButtonList.add(tmpButton);
+            projectRadioButtonList.add(radioButton);
         }
     }
  
