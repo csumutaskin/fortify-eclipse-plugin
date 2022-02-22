@@ -24,6 +24,13 @@ import util.ConsoleUtils;
 import util.FortifyScanUtils;
 import util.WorkspaceUtils;
 
+/**
+ * Handler that is triggered if end user wishes the Fortify report as a separate PDF file.
+ * Generated report is created on user desktop.
+ * 
+ * @author Umut
+ *
+ */
 public class FileReportHandler extends AbstractHandler {
 
 	private static final Logger LOGGER = Logger.getLogger(FileReportHandler.class.getName());

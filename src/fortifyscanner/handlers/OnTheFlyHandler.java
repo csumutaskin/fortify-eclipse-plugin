@@ -31,6 +31,13 @@ import util.ConsoleUtils;
 import util.FortifyScanUtils;
 import util.WorkspaceUtils;
 
+/**
+ * Handler that is triggered if end user wishes the Fortify report on Eclipse IDE itself.
+ * Generated report can be seen on a custom view on IDE but with less info than a generated PDF report.
+ * 
+ * @author Umut
+ *
+ */
 public class OnTheFlyHandler extends AbstractHandler {
 	
 	private static final Logger LOGGER = Logger.getLogger(OnTheFlyHandler.class.getName());
