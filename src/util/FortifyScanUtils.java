@@ -102,8 +102,16 @@ public class FortifyScanUtils {
 	/**
 	 * Scans results to a file
 	 */
-	public static void scanToFile() {
-		
+	public static void scanToFile(String projectRootPath) {
+		// sourceanalyzer -b 1 D:\Dev\workspaces\java\sandbox\Sample
+		// sourceanalyzer -b 1 -scan -f Sample.fpr
+		// ReportGenerator.bat -format pdf -f
+		// C:\Users\UMUT\Desktop\Fortify-SCA-Report.pdf -source
+		// D:\Dev\workspaces\reports\FortifySCAReports\Sample2.fpr -showRemoved
+		// -showSuppressed -showHidden -template
+		// D:\Dev\tools\Fortify\Fortify_SCA_and_Apps_20.1.1\bin\AllIssues.xml
+//		String[] command = { "cmd.exe", "/C", "Start", "C:/Users/Umut/Desktop/fortify.bat" };
+//		Runtime.getRuntime().exec(command);
 	}
 	
 	/**

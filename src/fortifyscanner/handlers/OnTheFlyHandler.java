@@ -41,7 +41,6 @@ public class OnTheFlyHandler extends AbstractHandler {
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		//command();
 		triggerWizard(event);
 		return null;
 	}
@@ -125,28 +124,5 @@ public class OnTheFlyHandler extends AbstractHandler {
 			return;
 		}
 		MessageDialog.openInformation(window.getShell(), "On-the-fly Report", "FortifyScanner issues are logged to the console.");
-	}
-		
-//	private void printToEclipseConsole(String toPrint) {
-//		RenameableMessageConsole console = new RenameableMessageConsole("Fortify SCA On The Fly Report", null);
-//		console.setConsoleName("FORTIFY REPORT");
-//		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
-//		ConsolePlugin.getDefault().getConsoleManager().showConsoleView(console);
-//		MessageConsoleStream stream = console.newMessageStream();
-//		stream.println(toPrint);
-//		stream.println("...Scan completed successfully...");
-//	}
-	
-	private void command() {
-		try {						
-			//sourceanalyzer -b 1 D:\Dev\workspaces\java\sandbox\Sample
-			//sourceanalyzer -b 1 -scan -f Sample.fpr
-			//ReportGenerator.bat -format pdf -f C:\Users\UMUT\Desktop\Fortify-SCA-Report.pdf -source D:\Dev\workspaces\reports\FortifySCAReports\Sample2.fpr -showRemoved -showSuppressed -showHidden -template D:\Dev\tools\Fortify\Fortify_SCA_and_Apps_20.1.1\bin\AllIssues.xml
-			String[] command = {"cmd.exe", "/C", "Start" , "C:/Users/Umut/Desktop/fortify.bat"};
-			Runtime.getRuntime().exec(command);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }

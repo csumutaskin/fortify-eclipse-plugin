@@ -19,7 +19,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import components.ProjectListDialog;
-import model.FortifyIssueDto;
 import model.ProjectDto;
 import util.ConsoleUtils;
 import util.FortifyScanUtils;
@@ -54,9 +53,7 @@ public class FileReportHandler extends AbstractHandler {
 		int responseCode = -1;
 		String title = "Choose a Project:";
 		String explanation = " A Fortify Scan Analysis Report will be created with Project name on desktop."
-				+ System.lineSeparator() + "You will be informed when this process is completed"
-				+ System.lineSeparator();
-
+				+ System.lineSeparator() + "You will be informed when this process is completed";
 		List<Entry<String, String>> projectList = new ArrayList<>();
 		for (ProjectDto projectDTO : allWorkspaceProjects) {
 			projectList.add(new SimpleEntry<String, String>(projectDTO.getProjectPath(), projectDTO.getProjectName()));
@@ -68,22 +65,17 @@ public class FileReportHandler extends AbstractHandler {
 
 		switch (returnValue) {
 		case Window.OK:
-			System.out.println("OK: " + projectsDialog.getProjectRootPath());
-			// String runFortifyScanOnPath =
-			// runFortifyScanOnPath(projectsDialog.getSelectedButton());
-			ConsoleUtils.printMessageToConsoleWithNameConsole("... Check desktop for the report ...");
-			List<FortifyIssueDto> scanned = FortifyScanUtils.scanOnTheFly(projectsDialog.getProjectRootPath());
-
-			// printToEclipseConsole(runFortifyScanOnPath);
-			// ConsoleUtils.printMessageToConsoleWithNameConsole(runFortifyScanOnPath);
+			LOGGER.info("User has chosen project with root path: " + projectsDialog.getProjectRootPath());
+			ConsoleUtils.printMessageToConsoleWithNameConsole("... Check Desktop for the report ...");
+			FortifyScanUtils.scanToFile(projectsDialog.getProjectRootPath());
 			responseCode = Window.OK;
 			break;
 		case Window.CANCEL:
-			System.out.println("CANCEL");
+			LOGGER.info("CANCEL button pressed on project choice dialog by the end user");
 			responseCode = Window.CANCEL;
 			break;
 		default:
-			System.out.println("Unexpected..");
+			LOGGER.info("Unexpected thing happened with the project dialog..");
 			break;
 		}
 		return responseCode;
@@ -97,24 +89,6 @@ public class FileReportHandler extends AbstractHandler {
 			e.printStackTrace();
 			return;
 		}
-		MessageDialog.openInformation(window.getShell(), "On-the-fly Report",
-				"FortifyScanner issues are logged to the console.");
-	}
-
-	private void command() {
-		try {
-			// sourceanalyzer -b 1 D:\Dev\workspaces\java\sandbox\Sample
-			// sourceanalyzer -b 1 -scan -f Sample.fpr
-			// ReportGenerator.bat -format pdf -f
-			// C:\Users\UMUT\Desktop\Fortify-SCA-Report.pdf -source
-			// D:\Dev\workspaces\reports\FortifySCAReports\Sample2.fpr -showRemoved
-			// -showSuppressed -showHidden -template
-			// D:\Dev\tools\Fortify\Fortify_SCA_and_Apps_20.1.1\bin\AllIssues.xml
-			String[] command = { "cmd.exe", "/C", "Start", "C:/Users/Umut/Desktop/fortify.bat" };
-			Runtime.getRuntime().exec(command);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		MessageDialog.openInformation(window.getShell(), "Report Generated", "Please check your desktop for the generated report.");
 	}
 }
