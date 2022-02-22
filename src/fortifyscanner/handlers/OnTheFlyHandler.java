@@ -57,7 +57,6 @@ public class OnTheFlyHandler extends AbstractHandler {
 			allWorkspaceProjects = WorkspaceUtils.getAllProjectSummaryInfoInCurrentWorkspace();
 			int responseCode = openChooseProjectDialog();
 			if(responseCode == Window.OK) {// User hit ok button
-				logConsoleScanHasStarted();
 				openOKPressedDialog(event);
 			} else if(responseCode == Window.CANCEL) {
 				LOGGER.info("User cancelled the Fortify Scan on his/her will...");
@@ -65,10 +64,6 @@ public class OnTheFlyHandler extends AbstractHandler {
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Unexpected exception during plugin's wizard execution: ", e);
 		}
-	}
-	
-	private void logConsoleScanHasStarted() {
-		
 	}
 	
 	private int openChooseProjectDialog() throws IOException {
@@ -87,22 +82,18 @@ public class OnTheFlyHandler extends AbstractHandler {
 
         switch (returnValue) {
         case Window.OK:
-            System.out.println("OK: " +  projectsDialog.getProjectRootPath());
-            //String runFortifyScanOnPath = runFortifyScanOnPath(projectsDialog.getSelectedButton());
+            LOGGER.info("User has chosen: " +  projectsDialog.getProjectRootPath());
             ConsoleUtils.printMessageToConsoleWithNameConsole("... Check Fortify On-the-Fly Console for detected issues ...");
             List<FortifyIssueDto> scanned = FortifyScanUtils.scanOnTheFly(projectsDialog.getProjectRootPath());
-            
-            //printToEclipseConsole(runFortifyScanOnPath);
-            //ConsoleUtils.printMessageToConsoleWithNameConsole(runFortifyScanOnPath);
             updateFortifyConsoleView(scanned);
             responseCode = Window.OK;
             break;
         case Window.CANCEL:
-            System.out.println("CANCEL");
+        	LOGGER.info("User has CANCELed choosing a project.");
             responseCode = Window.CANCEL;
             break;
         default:
-            System.out.println("Unexpected..");
+        	LOGGER.info("Unexpected dialog operation..");
             break;
         }
         return responseCode;

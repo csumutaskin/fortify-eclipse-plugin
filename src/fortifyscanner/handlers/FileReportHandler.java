@@ -60,7 +60,7 @@ public class FileReportHandler extends AbstractHandler {
 		int responseCode = -1;
 		String title = "Choose a Project:";
 		String explanation = " A Fortify Scan Analysis Report will be created with Project name on desktop."
-				+ System.lineSeparator() + "You will be informed when this process is completed";
+				+ System.lineSeparator() + "! Please make sure that Fortify->/bin folder is set on O.S. Path !";
 		List<Entry<String, String>> projectList = new ArrayList<>();
 		for (ProjectDto projectDTO : allWorkspaceProjects) {
 			projectList.add(new SimpleEntry<String, String>(projectDTO.getProjectPath(), projectDTO.getProjectName()));
