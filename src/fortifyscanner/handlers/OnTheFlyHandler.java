@@ -81,10 +81,10 @@ public class OnTheFlyHandler extends AbstractHandler {
 
         switch (returnValue) {
         case Window.OK:
-            System.out.println("OK: " +  projectsDialog.getSelectedButton());
+            System.out.println("OK: " +  projectsDialog.getProjectRootPath());
             //String runFortifyScanOnPath = runFortifyScanOnPath(projectsDialog.getSelectedButton());
             ConsoleUtils.printMessageToConsoleWithNameConsole("... Check Fortify On-the-Fly Console for detected issues ...");
-            List<FortifyIssueDto> scanned = FortifyScanUtils.scanOnTheFly(projectsDialog.getSelectedButton());
+            List<FortifyIssueDto> scanned = FortifyScanUtils.scanOnTheFly(projectsDialog.getProjectRootPath());
             
             //printToEclipseConsole(runFortifyScanOnPath);
             //ConsoleUtils.printMessageToConsoleWithNameConsole(runFortifyScanOnPath);
