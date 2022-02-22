@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 public class ProjectListDialog extends TitleAreaDialog {
 	 
     private String chosenProjectRootPathByEndUser;
+    private String chosenProjectName;
     private String windowTitle;
     private String windowInfo;
     private int messageType;  
@@ -39,7 +40,6 @@ public class ProjectListDialog extends TitleAreaDialog {
         this.windowInfo = windowInfo;
         this.projectInfoList = projectInfoList;
         this.messageType = messageType;
-        chosenProjectRootPathByEndUser = null;
     }
  
     @Override
@@ -85,6 +85,7 @@ public class ProjectListDialog extends TitleAreaDialog {
     	 for (int i = 0; i < projectRadioButtonList.size(); i++) {
              if (projectRadioButtonList.get(i).getSelection()) {
                  chosenProjectRootPathByEndUser = projectInfoList.get(i).getKey();
+                 chosenProjectName = projectInfoList.get(i).getValue();
              }
          }
         super.okPressed(); 
@@ -94,8 +95,16 @@ public class ProjectListDialog extends TitleAreaDialog {
      * Returns full path of the project, stored in projectRootPath field.
      * @return project root's full path
      */
-    public String getProjectRootPath() {
+    public String getChosenProjectRootPath() {
         return chosenProjectRootPathByEndUser;
+    }
+    
+    /** 
+     * Returns name of the project, stored in chosenProjectName field.
+     * @return project root's full path
+     */
+    public String getChosenProjectName() {
+    	return chosenProjectName;
     }
  
 }

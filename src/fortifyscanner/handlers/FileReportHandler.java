@@ -72,9 +72,9 @@ public class FileReportHandler extends AbstractHandler {
 
 		switch (returnValue) {
 		case Window.OK:
-			LOGGER.info("User has chosen project with root path: " + projectsDialog.getProjectRootPath());
+			LOGGER.info("User has chosen project with root path: " + projectsDialog.getChosenProjectRootPath());
 			ConsoleUtils.printMessageToConsoleWithNameConsole("... Check Desktop for the report ...");
-			FortifyScanUtils.scanToFile(projectsDialog.getProjectRootPath());
+			FortifyScanUtils.scanToFile(projectsDialog.getChosenProjectName() , projectsDialog.getChosenProjectRootPath());
 			responseCode = Window.OK;
 			break;
 		case Window.CANCEL:

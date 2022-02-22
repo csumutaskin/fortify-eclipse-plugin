@@ -82,9 +82,9 @@ public class OnTheFlyHandler extends AbstractHandler {
 
         switch (returnValue) {
         case Window.OK:
-            LOGGER.info("User has chosen: " +  projectsDialog.getProjectRootPath());
+            LOGGER.info("User has chosen: " +  projectsDialog.getChosenProjectRootPath());
             ConsoleUtils.printMessageToConsoleWithNameConsole("... Check Fortify On-the-Fly Console for detected issues ...");
-            List<FortifyIssueDto> scanned = FortifyScanUtils.scanOnTheFly(projectsDialog.getProjectRootPath());
+            List<FortifyIssueDto> scanned = FortifyScanUtils.scanOnTheFly(projectsDialog.getChosenProjectRootPath());
             updateFortifyConsoleView(scanned);
             responseCode = Window.OK;
             break;

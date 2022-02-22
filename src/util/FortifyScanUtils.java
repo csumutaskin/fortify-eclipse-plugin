@@ -102,11 +102,11 @@ public class FortifyScanUtils {
 	/**
 	 * Scans results to a file
 	 */
-	public static void scanToFile(String fullProjectRootPathToScan) {
+	public static void scanToFile(String projectName, String fullProjectRootPathToScan) {
 		
 		//Creates fortify project report (fpr) file first. user friendly report will be created from this .fpr
 		String commandToCreateFpr = "sourceanalyzer " + fullProjectRootPathToScan + " -scan -f C:\\Users\\UMUT\\Desktop\\Sample.fpr";
-		String commandToCreatePDF = "ReportGenerator.bat -format pdf -f C:\\Users\\UMUT\\Desktop\\Fortify-SCA-Report.pdf -source C:\\Users\\UMUT\\Desktop\\Sample.fpr -showRemoved -showSuppressed -showHidden -template D:\\Dev\\tools\\Fortify\\Fortify_SCA_and_Apps_20.1.1\\bin\\AllIssues.xml";
+		String commandToCreatePDF = "ReportGenerator.bat -format pdf -f C:\\Users\\UMUT\\Desktop\\"+ projectName +"-Report.pdf -source C:\\Users\\UMUT\\Desktop\\Sample.fpr -showRemoved -showSuppressed -showHidden -template D:\\Dev\\tools\\Fortify\\Fortify_SCA_and_Apps_20.1.1\\bin\\AllIssues.xml";
 		LOGGER.info("SourceAnalyzer command is: " + commandToCreateFpr);		
 		try {
 			Process process = Runtime.getRuntime().exec(commandToCreateFpr);
