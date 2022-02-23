@@ -1,10 +1,8 @@
 package util;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +12,6 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.URIUtil;
 import org.osgi.framework.Bundle;
 
 import model.FortifyIssueDto;
@@ -139,16 +136,13 @@ public class FortifyScanUtils {
 		
 		Bundle bundle = Platform.getBundle("FortifyScanner");
 		URL url = FileLocator.find(bundle, new Path("resources/AllIssues.xml"), null);
-		//File file = null;		
 		try {
 			url = FileLocator.toFileURL(url);
 			return url.toString().replace("file:","");
-			//file = URIUtil.toFile(URIUtil.toURI(url));			 
 		} catch (IOException e1) {
 			LOGGER.log(Level.WARNING, "Can not retrieve AllIssues.xml template for current Plugin, so the output report will give limited information without all issue info", e1);
 		}
-		return "";
-		
+		return "";		
 	}
 	
 	/**

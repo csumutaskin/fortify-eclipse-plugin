@@ -59,8 +59,8 @@ public class FileReportHandler extends AbstractHandler {
 	private int openChooseProjectDialog() throws IOException {
 		int responseCode = -1;
 		String title = "Choose a Project:";
-		String explanation = " A Fortify Scan Analysis Report will be created with Project name on desktop."
-				+ System.lineSeparator() + "! Please make sure that Fortify->/bin folder is set on O.S. Path !";
+		String explanation = "Report will be created on Desktop."
+				+ System.lineSeparator() + "Be sure to set Fortify->/bin folder on O.S. Path";
 		List<Entry<String, String>> projectList = new ArrayList<>();
 		for (ProjectDto projectDTO : allWorkspaceProjects) {
 			projectList.add(new SimpleEntry<String, String>(projectDTO.getProjectPath(), projectDTO.getProjectName()));

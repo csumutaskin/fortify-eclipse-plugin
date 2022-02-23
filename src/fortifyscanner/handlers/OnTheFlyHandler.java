@@ -69,8 +69,8 @@ public class OnTheFlyHandler extends AbstractHandler {
 	private int openChooseProjectDialog() throws IOException {
 		int responseCode = -1; 
         String title = "Choose a Project:";
-        String explanation = " Chosen project will be scanned in another Background Operating System Process by the Fortify SCA and issues will be logged to the console."
-        		+ System.lineSeparator() + "You will be informed when this process is completed" + System.lineSeparator();
+        String explanation = "Issues after scan will be listed on Fortify on the fly View"
+        		+ System.lineSeparator() + "You can open view on Window -> Show View Menu";
         
         List<Entry<String,String>> projectList = new ArrayList<>();
         for(ProjectDto projectDTO: allWorkspaceProjects) {
