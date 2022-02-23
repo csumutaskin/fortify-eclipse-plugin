@@ -142,7 +142,7 @@ public class FortifyScanUtils {
 		//File file = null;		
 		try {
 			url = FileLocator.toFileURL(url);
-			return url.toString();
+			return url.toString().replace("file:","");
 			//file = URIUtil.toFile(URIUtil.toURI(url));			 
 		} catch (IOException e1) {
 			LOGGER.log(Level.WARNING, "Can not retrieve AllIssues.xml template for current Plugin, so the output report will give limited information without all issue info", e1);
