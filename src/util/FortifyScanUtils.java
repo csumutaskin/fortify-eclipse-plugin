@@ -1,12 +1,21 @@
 package util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.URIUtil;
+import org.osgi.framework.Bundle;
 
 import model.FortifyIssueDto;
 import model.FortifyScanResultDto;
@@ -103,11 +112,16 @@ public class FortifyScanUtils {
 	 * Scans results to a file
 	 */
 	public static void scanToFile(String projectName, String fullProjectRootPathToScan) {
-		
+		System.out.println(System.getProperty("user.home"));
 		//Creates fortify project report (fpr) file first. user friendly report will be created from this .fpr
-		String commandToCreateFpr = "sourceanalyzer " + fullProjectRootPathToScan + " -scan -f C:\\Users\\UMUT\\Desktop\\Sample.fpr";
-		String commandToCreatePDF = "ReportGenerator.bat -format pdf -f C:\\Users\\UMUT\\Desktop\\"+ projectName +"-Report.pdf -source C:\\Users\\UMUT\\Desktop\\Sample.fpr -showRemoved -showSuppressed -showHidden -template D:\\Dev\\tools\\Fortify\\Fortify_SCA_and_Apps_20.1.1\\bin\\AllIssues.xml";
-		LOGGER.info("SourceAnalyzer command is: " + commandToCreateFpr);		
+		String commandToCreateFpr = "sourceanalyzer " + fullProjectRootPathToScan + " -scan -f " + System.getProperty("user.home") + "/Desktop/" + projectName + ".fpr";
+		LOGGER.info("SourceAnalyzer command is: " + commandToCreateFpr);
+		
+		String templatePath = getAllIssuesTemplateResourcePath();
+		String templateSuffixCommand = "".equals(templatePath) ? "" : "-template " + templatePath;
+		String commandToCreatePDF = "ReportGenerator.bat -format pdf -f " + System.getProperty("user.home") + "/Desktop/"+ projectName +"-Report.pdf -source " + System.getProperty("user.home") + "/Desktop/" + projectName + ".fpr  -showRemoved -showSuppressed -showHidden  " + templateSuffixCommand;
+		LOGGER.info("Report Generator command is: " + commandToCreatePDF);	
+		
 		try {
 			Process process = Runtime.getRuntime().exec(commandToCreateFpr);
 			process.waitFor();
@@ -118,6 +132,23 @@ public class FortifyScanUtils {
 			LOGGER.log(Level.SEVERE, "Exception Running PDF report generation in the background:  ", e);
 			e.printStackTrace();
 		} 
+	}
+	
+	//Tries to locate all issues XML template (think of it as a resource) in plugin, return empty string if not located
+	private static String getAllIssuesTemplateResourcePath() {
+		
+		Bundle bundle = Platform.getBundle("FortifyScanner");
+		URL url = FileLocator.find(bundle, new Path("resources/AllIssues.xml"), null);
+		//File file = null;		
+		try {
+			url = FileLocator.toFileURL(url);
+			return url.toString();
+			//file = URIUtil.toFile(URIUtil.toURI(url));			 
+		} catch (IOException e1) {
+			LOGGER.log(Level.WARNING, "Can not retrieve AllIssues.xml template for current Plugin, so the output report will give limited information without all issue info", e1);
+		}
+		return "";
+		
 	}
 	
 	/**
