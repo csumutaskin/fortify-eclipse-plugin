@@ -91,7 +91,7 @@ public class FortifyScanUtils {
 		if(current == null && line.startsWith("[") && line.endsWith("]")) {
 			String lineToBeParsed = line.substring(1, line.length() - 1);
 			String[] splitted = lineToBeParsed.split(":");
-			if(splitted.length != 5) {
+			if(splitted.length < 4) { //issue line contains at least id, severity, reason and type, otherwise it is not an issue
 				PROJECT_ROOT_PATH = lineToBeParsed;
 				return new FortifyLineJoinerAndParser(current, false);
 			}
@@ -99,8 +99,8 @@ public class FortifyScanUtils {
 			current.setId(splitted[0]);
 			current.setSeverity(splitted[1]);
 			current.setReason(splitted[2]);
-			current.setDescription(splitted[3]);
-			current.setType(splitted[4]);
+			current.setDescription(splitted.length == 4 ? null : splitted[3]);
+			current.setType(splitted.length == 4 ? splitted[3] : splitted[4]);
 		}
 		return new FortifyLineJoinerAndParser(current, false);
 	}
