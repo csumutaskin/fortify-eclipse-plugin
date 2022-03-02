@@ -123,7 +123,7 @@ public class FortifyScanUtils {
 		} else if(numberWrappedWithParanthesis.find()) { //line contains "(Number)" so it is a location trace
 			IssueDetails issueDetails = parsedReport.get(id);
 			if(issueDetails != null) {
-				issueDetails.addLocationTrace(line);
+				issueDetails.addLocationTrace(line + System.lineSeparator());
 			}			
 		}
 		return id;
@@ -167,15 +167,6 @@ public class FortifyScanUtils {
 			LOGGER.log(Level.WARNING, "Can not retrieve AllIssues.xml template for current Plugin, so the output report will give limited information without all issue info", e1);
 		}
 		return "";		
-	}
-	
-	/**
-	 * Maps on the fly scan response to a FortifyScanResultDTO
-	 * @param result log that holds all on the fly scan result
-	 * @return mapped result in a DTO object
-	 */
-	public static FortifyScanResultDto mapOnTheFlyScanToDTO(String result) {
-		return null;
 	}
 	
 	/**

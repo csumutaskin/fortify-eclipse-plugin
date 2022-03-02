@@ -35,7 +35,7 @@ public class FortifyConsoleView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 
-		int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
+		int style = SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
 		table = new Table(parent, style);
 		viewer = new TableViewer(table);
 
