@@ -5,9 +5,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
@@ -27,7 +32,10 @@ public class FortifyScanUtils {
 	
 	private static final Logger LOGGER = Logger.getLogger(FortifyScanUtils.class.getName());
 	public static String PROJECT_ROOT_PATH = null;
-	
+	private static Map<String, IssueDetails> parsedReport = new HashMap<>();
+	private static Matcher numberWrappedWithParanthesis = null;
+	private static Pattern pattern = Pattern.compile("([0-9])");
+		
 	/**
 	 * Creates an on the fly scan (no file generation, logs of result are kept in a parseable string).
 	 * @param fullProjectRootPathToScan full path in OS that points to be scanned project root path.
@@ -35,74 +43,90 @@ public class FortifyScanUtils {
 	 * @throws IOException 
 	 */
 	public static List<FortifyIssueDto> scanOnTheFly(String fullProjectRootPathToScan) throws IOException {
+
 		PROJECT_ROOT_PATH = null;
-		List<FortifyIssueDto> toReturn = new ArrayList<>();
 		StringBuilder completeLog = new StringBuilder();
-		String command = "sourceanalyzer " + fullProjectRootPathToScan + " -scan";
-		LOGGER.info("SourceAnalyzer command is: " + command);
-		BufferedReader bufferedReader = null;
-		InputStreamReader inputStreamReader = null;
-		try {
-			Process process = Runtime.getRuntime().exec(command);
-			inputStreamReader = new InputStreamReader(process.getInputStream());
-			bufferedReader = new BufferedReader(inputStreamReader);
-			
-			String line = "";
-			FortifyLineJoinerAndParser fortifyLineJoinerAndParser = null;
-			fortifyLineJoinerAndParser = toParse(null, "");		
-			
-			while ((line = bufferedReader.readLine()) != null) {
-				
-				fortifyLineJoinerAndParser = toParse(fortifyLineJoinerAndParser.fortifyIssueDto, line);
-				if(fortifyLineJoinerAndParser.complete) {
-					toReturn.add(fortifyLineJoinerAndParser.fortifyIssueDto);				
-				}
-				completeLog.append(line).append(System.lineSeparator());		    
+		String currentIssueId = null;
+		String responseLineOfCommand = "";
+		
+		String commandThatRunsInOS = "sourceanalyzer " + fullProjectRootPathToScan + " -scan";
+		LOGGER.info("SourceAnalyzer command is: " + commandThatRunsInOS);
+		
+		Process process = Runtime.getRuntime().exec(commandThatRunsInOS);
+		try(InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
+			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);) {
+			while ((responseLineOfCommand = bufferedReader.readLine()) != null) {
+				currentIssueId = parseAndGroupReportData(currentIssueId, responseLineOfCommand);
+				completeLog.append(responseLineOfCommand).append(System.lineSeparator());		    
 			}
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Exception Running Source Analyzer on OS Command level:  ", e);
 			e.printStackTrace();
-		} finally {
-			if(inputStreamReader != null) {
-				inputStreamReader.close();
-			}
-			if(bufferedReader != null) {
-				bufferedReader.close();
-			}
 		}
 		LOGGER.info(completeLog.toString());
+		return convert(parsedReport);
+	}
+	
+	/**
+	 * Converts a Pre-filled issue detail map to fortify issue DTO list.
+	 * @param toConvertMap map to be converted
+	 * @return list of fortify issue DTO
+	 */
+	public static List<FortifyIssueDto> convert(Map<String, IssueDetails> toConvertMap) {
+		List<FortifyIssueDto> toReturn = new ArrayList<>();
+		if(toConvertMap == null || toConvertMap.size() ==0) {
+			return toReturn;
+		}
+		Iterator<String> idIterator = toConvertMap.keySet().iterator();
+		while(idIterator.hasNext()) {
+			String id = idIterator.next();
+			IssueDetails issueDetail = toConvertMap.get(id);			
+			FortifyIssueDto inTurn = new FortifyIssueDto();
+			inTurn.setId(id);
+			inTurn.setDescription(issueDetail.getDescription());
+			inTurn.setLocation(issueDetail.getLocationTrace().toString());
+			inTurn.setReason(issueDetail.getReason());
+			inTurn.setSeverity(issueDetail.getSeverity());
+			inTurn.setType(issueDetail.getType());
+			toReturn.add(inTurn);
+		}
 		return toReturn;
 	}
 	
-	public static FortifyLineJoinerAndParser toParse(FortifyIssueDto current, String line) {
+	/**
+	 * maps fortify issue line to the related object attribute.
+	 * @param id issue id.
+	 * @param line line read from os command response.
+	 * @return current issue id again.
+	 */
+	public static String parseAndGroupReportData(String id, String line) {
 		
-		if(line != null) {
-			line = line.trim();
+		if(line == null || "".equals(line.trim())) { //reset issue id on new source analyzer group
+			return null;
 		}
-		if(current != null) {
-			if(current.getLocation() != null) {
-				current = null;	
+		line = line.trim();
+		numberWrappedWithParanthesis = pattern.matcher(line);
+		if(line.startsWith("[") && line.endsWith("]")) {
+			String lineWithoutSquareBrackets = line.substring(1, line.length() - 1);
+			String[] splitted = lineWithoutSquareBrackets.split(":");
+			if(splitted.length < 4) { //if line is a path at most one colon exists in the whole path...
+				PROJECT_ROOT_PATH = lineWithoutSquareBrackets;			
 			} else {
-				current.setLocation(line);
-				return new FortifyLineJoinerAndParser(current, true);
+				IssueDetails currentIssueDetail = new IssueDetails();
+				currentIssueDetail.setSeverity(splitted[1]);
+				currentIssueDetail.setReason(splitted[2]);
+				currentIssueDetail.setDescription(splitted.length == 4 ? null : splitted[3]);
+				currentIssueDetail.setType(splitted.length == 4 ? splitted[3] : splitted[4]);
+				parsedReport.put(splitted[0], currentIssueDetail);
+				return splitted[0];
+			}
+		} else if(numberWrappedWithParanthesis.find()) { //line contains "(Number)" so it is a location trace
+			IssueDetails issueDetails = parsedReport.get(id);
+			if(issueDetails != null) {
+				issueDetails.addLocationTrace(line);
 			}			
 		}
-		
-		if(current == null && line.startsWith("[") && line.endsWith("]")) {
-			String lineToBeParsed = line.substring(1, line.length() - 1);
-			String[] splitted = lineToBeParsed.split(":");
-			if(splitted.length < 4) { //issue line contains at least id, severity, reason and type, otherwise it is not an issue
-				PROJECT_ROOT_PATH = lineToBeParsed;
-				return new FortifyLineJoinerAndParser(current, false);
-			}
-			current = new FortifyIssueDto();
-			current.setId(splitted[0]);
-			current.setSeverity(splitted[1]);
-			current.setReason(splitted[2]);
-			current.setDescription(splitted.length == 4 ? null : splitted[3]);
-			current.setType(splitted.length == 4 ? splitted[3] : splitted[4]);
-		}
-		return new FortifyLineJoinerAndParser(current, false);
+		return id;
 	}
 	
 	/**
@@ -175,9 +199,53 @@ public class FortifyScanUtils {
 	public static class FortifyLineJoinerAndParser {
 		public FortifyIssueDto fortifyIssueDto;
 		public boolean complete = false;
-		public FortifyLineJoinerAndParser(FortifyIssueDto fortifyIssueDto, boolean complete) {
+		public String locationStackTrace;
+		public FortifyLineJoinerAndParser(FortifyIssueDto fortifyIssueDto, boolean complete, String locationStackTrace) {
 			this.complete = complete;
 			this.fortifyIssueDto = fortifyIssueDto;
+			this.locationStackTrace = locationStackTrace;
+		}
+	}
+	
+	public static class IssueDetails {
+		
+		private String severity;
+		private List<String> locationTrace = new ArrayList<String>();
+		private String reason;
+		private String description;
+		private String type;
+		public String getSeverity() {
+			return severity;
+		}
+		public void setSeverity(String severity) {
+			this.severity = severity;
+		}
+		public List<String> getLocationTrace() {
+			return locationTrace;
+		}
+		public void setLocationTrace(List<String> locationTrace) {
+			this.locationTrace = locationTrace;
+		}
+		public String getReason() {
+			return reason;
+		}
+		public void setReason(String reason) {
+			this.reason = reason;
+		}
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}			
+		public void addLocationTrace(String traceLine) {
+			locationTrace.add(traceLine);
 		}
 	}
 }

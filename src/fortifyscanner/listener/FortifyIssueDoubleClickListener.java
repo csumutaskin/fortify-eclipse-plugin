@@ -2,6 +2,8 @@ package fortifyscanner.listener;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -46,11 +48,9 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 			return;
 		}
 		System.out.println(issue.getDescription());
-		String location = issue.getLocation();
-		location = location.replace(")", "");
-		String[] classAndLineInfo = location.split("\\(");
-		String classWithPackagePath = classAndLineInfo[0];
-		String line = classAndLineInfo[1];
+		ParsedLocationInfo locationInfo = parseLocationTrace(issue.getLocation());
+		String classWithPackagePath = locationInfo.getClassName();
+		String line = locationInfo.getLineNumber();
 		System.out.println(classWithPackagePath);
 		System.out.println(line);
 		String fullPath = FortifyScanUtils.PROJECT_ROOT_PATH + "/" + classWithPackagePath;
@@ -73,17 +73,38 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 				page.activate(editor);
 
 			} catch (PartInitException e) {
-				// Put your exception handler here if you wish to
+				// TODO: Check here...
 			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
+				// TODO Check here...
 				e.printStackTrace();
 			} catch (BadLocationException e) {
-				// TODO Auto-generated catch block
+				// TODO Check here...
 				e.printStackTrace();
 			}
 		} else {
 			// Do something if the file does not exist
 		}
+	}
+	
+	/**
+	 * Parses location trace in the form of 
+	 * [className(line)], [className(line),...,causeClassName(causeLine)]...
+	 * @param locationTrace trace line
+	 * @return ParsedLocationInfo object
+	 */
+	public ParsedLocationInfo parseLocationTrace(String locationTrace) {
+		ParsedLocationInfo toReturn = new ParsedLocationInfo();
+		String[] issueLocations = locationTrace.split(",");//To split array to string formation back into elements;
+		String lastIssueLocation = issueLocations[issueLocations.length - 1];
+		String[] partsOfIssueLocation = lastIssueLocation.split("\\[|\\]");		
+		for(String currentPart : partsOfIssueLocation) {
+			if(currentPart.contains(".java")) {
+				String[] classAndLine = currentPart.replace("(","").replace(")", "").split(".java");
+				toReturn.setClassName(classAndLine[0] + ".java");
+				toReturn.setLineNumber(classAndLine[1]);
+			}			
+		}
+		return toReturn;
 	}
 
 	// Taken from user dbrank0's answer @
@@ -110,5 +131,22 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 				// whatever
 			}
 		}
+	}
+	
+	public class ParsedLocationInfo {
+		private String className;
+		private String lineNumber;
+		public String getClassName() {
+			return className;
+		}
+		public void setClassName(String className) {
+			this.className = className;
+		}
+		public String getLineNumber() {
+			return lineNumber;
+		}
+		public void setLineNumber(String lineNumber) {
+			this.lineNumber = lineNumber;
+		}		
 	}
 }
