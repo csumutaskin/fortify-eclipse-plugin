@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
 import model.FortifyIssueDto;
-import model.FortifyScanResultDto;
 
 /** 
  * A utility that facilitates fortify scans (using command line command) and mapping results into proper objects.
@@ -84,7 +83,8 @@ public class FortifyScanUtils {
 			FortifyIssueDto inTurn = new FortifyIssueDto();
 			inTurn.setId(id);
 			inTurn.setDescription(issueDetail.getDescription());
-			inTurn.setLocation(issueDetail.getLocationTrace().toString());
+			inTurn.setLocation(issueDetail.getLocationTrace() != null ? issueDetail.getLocationTrace().get(0) : null);
+			inTurn.setLocationTrace(issueDetail.getLocationTrace());
 			inTurn.setReason(issueDetail.getReason());
 			inTurn.setSeverity(issueDetail.getSeverity());
 			inTurn.setType(issueDetail.getType());

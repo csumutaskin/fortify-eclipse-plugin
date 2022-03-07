@@ -89,6 +89,14 @@
             inject="true"
             name="Fortify On-the-Fly">
       </view>
+      <view
+            category="FortifyIssueDetailScanner"
+            class="fortifyscanner.views.FortifyIssueDetailView"
+            icon="icons/fortify.png"
+            id="fortifyscanner.views.FortifyIssueDetailView"
+            inject="true"
+            name="Fortify Issue Trace">
+      </view>
    </extension>
    <!-- Eclipse Perspective Additions -->
    <extension

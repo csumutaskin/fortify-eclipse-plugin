@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 /**
  * A parsed fortify issue DTO into proper fields
  * 
@@ -11,9 +13,11 @@ public class FortifyIssueDto {
 	private String id;
 	private String severity;
 	private String location;
+	private List<String> locationTrace;
 	private String reason;
 	private String description;
 	private String type;
+	
 	public String getId() {
 		return id;
 	}
@@ -49,5 +53,11 @@ public class FortifyIssueDto {
 	}
 	public void setType(String type) {
 		this.type = type;
-	}	
+	}
+	public List<String> getLocationTrace() {
+		return locationTrace;
+	}
+	public void setLocationTrace(List<String> locationTrace) {
+		this.locationTrace = locationTrace;
+	}
 }

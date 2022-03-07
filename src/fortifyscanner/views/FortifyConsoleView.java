@@ -35,7 +35,7 @@ public class FortifyConsoleView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 
-		int style = SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
+		int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
 		table = new Table(parent, style);
 		viewer = new TableViewer(table);
 
@@ -44,18 +44,16 @@ public class FortifyConsoleView extends ViewPart {
 		viewer.setContentProvider(new FortifyConsoleContentProvider());
 		viewer.setLabelProvider(new FortifyConsoleLabelProvider());
 
-		viewer.setContentProvider(new FortifyConsoleContentProvider());
+		//viewer.setContentProvider(new FortifyConsoleContentProvider());
 		viewer.setInput(data);
 		viewer.addDoubleClickListener(new FortifyIssueDoubleClickListener(viewer));
 	}
 
 	private void enrichTable(Table table, Composite parent, TableViewer tableViewer) {
-//		int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
-//		table = new Table(parent, style);
 
 		GridData gridData = new GridData(GridData.FILL_BOTH);
 		gridData.grabExcessVerticalSpace = true;
-		gridData.horizontalSpan = 3;
+		gridData.horizontalSpan = 3;		
 		table.setLayoutData(gridData);
 
 		table.setLinesVisible(true);
@@ -150,7 +148,7 @@ public class FortifyConsoleView extends ViewPart {
 				result = fi.getSeverity();
 				break;
 			case 2:
-				result = fi.getLocation();
+				result = fi.getLocation();				
 				break;
 			case 3:
 				result = fi.getReason();
