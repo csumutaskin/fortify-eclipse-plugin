@@ -83,7 +83,7 @@ public class FortifyScanUtils {
 			FortifyIssueDto inTurn = new FortifyIssueDto();
 			inTurn.setId(id);
 			inTurn.setDescription(issueDetail.getDescription());
-			inTurn.setLocation(issueDetail.getLocationTrace() != null ? issueDetail.getLocationTrace().get(0) : null);
+			inTurn.setLocation(issueDetail.getLocationTrace() != null && issueDetail.getLocationTrace().get(0) != null ? issueDetail.getLocationTrace().get(0).trim() : null);
 			inTurn.setLocationTrace(issueDetail.getLocationTrace());
 			inTurn.setReason(issueDetail.getReason());
 			inTurn.setSeverity(issueDetail.getSeverity());
@@ -104,7 +104,7 @@ public class FortifyScanUtils {
 		if(line == null || "".equals(line.trim())) { //reset issue id on new source analyzer group
 			return null;
 		}
-		line = line.trim();
+		//line = line.trim();
 		numberWrappedWithParanthesis = pattern.matcher(line);
 		if(line.startsWith("[") && line.endsWith("]")) {
 			String lineWithoutSquareBrackets = line.substring(1, line.length() - 1);

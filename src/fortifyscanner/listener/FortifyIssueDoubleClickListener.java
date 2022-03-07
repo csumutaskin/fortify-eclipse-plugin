@@ -29,6 +29,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 import fortifyscanner.views.FortifyIssueDetailView;
 import model.FortifyIssueDto;
+import model.ParsedLocationInfo;
 import util.FortifyScanUtils;
 
 /**
@@ -91,21 +92,7 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 			throw new RuntimeException(new FileNotFoundException());
 		}
 	}
-	
-//	private void updateFortifyIssueDetailView(List<FortifyIssueDto> scanned) {
-//		IWorkbenchWindow workbench = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-//		IWorkbenchPage page = workbench.getActivePage();
-//		try {
-//			IViewPart viewPart = page.showView("fortifyscanner.views.FortifyConsoleView");
-//			FortifyConsoleView fcv = (FortifyConsoleView)viewPart;
-//			FortifyScanResultDto fscanResult = new FortifyScanResultDto();			
-//			fscanResult.setIssues(scanned);
-//			fcv.refreshFortifyConsoleData(fscanResult);
-//		} catch (PartInitException e) {
-//			e.printStackTrace();
-//		}
-//	}
-	
+
 	private void updateFortifyIssueDetailView(List<String> locationLog, String infoHeader) {
 		IWorkbenchWindow workbench = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = workbench.getActivePage();
@@ -127,8 +114,8 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 	public ParsedLocationInfo parseLocationTrace(String locationTrace) {
 		ParsedLocationInfo toReturn = new ParsedLocationInfo();
 		String[] issueLocations = locationTrace.split(",");//To split array to string formation back into elements;
-		String lastIssueLocation = issueLocations[issueLocations.length - 1];
-		String[] partsOfIssueLocation = lastIssueLocation.split("\\[|\\]");		
+		String firstIssueLocation = issueLocations[0];
+		String[] partsOfIssueLocation = firstIssueLocation.split("\\[|\\]");		
 		for(String currentPart : partsOfIssueLocation) {
 			if(currentPart.contains(".java")) {
 				String[] classAndLine = currentPart.replace("(","").replace(")", "").trim().split(".java");
@@ -162,22 +149,5 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 				LOGGER.log(Level.SEVERE, "An exception -CoreException- occurred after the marker is trying to be deleted when editor is being opened", ce);
 			}
 		}
-	}
-	
-	public class ParsedLocationInfo {
-		private String className;
-		private String lineNumber;
-		public String getClassName() {
-			return className;
-		}
-		public void setClassName(String className) {
-			this.className = className;
-		}
-		public String getLineNumber() {
-			return lineNumber;
-		}
-		public void setLineNumber(String lineNumber) {
-			this.lineNumber = lineNumber;
-		}		
 	}
 }

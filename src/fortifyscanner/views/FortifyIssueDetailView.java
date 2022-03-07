@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
-import fortifyscanner.listener.FortifyIssueDoubleClickListener;
+import fortifyscanner.listener.FortifyIssueLocationTraceDoubleClickListener;
 
 public class FortifyIssueDetailView extends ViewPart {
 
@@ -42,7 +42,7 @@ public class FortifyIssueDetailView extends ViewPart {
 		viewer.setLabelProvider(new FortifyIssueDetailLabelProvider());
 
 		viewer.setInput(data);
-		viewer.addDoubleClickListener(new FortifyIssueDoubleClickListener(viewer));
+		viewer.addDoubleClickListener(new FortifyIssueLocationTraceDoubleClickListener(viewer));
 	}
 
 	private void enrichTable(Table table, Composite parent, TableViewer tableViewer) {
