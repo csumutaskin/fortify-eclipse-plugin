@@ -76,8 +76,7 @@ public class FortifyIssueLocationTraceDoubleClickListener implements IDoubleClic
 	}
 	
 	/**
-	 * Parses location trace in the form of 
-	 * [className(line)], [className(line),...,causeClassName(causeLine)]...
+	 * Parses location trace into class and line information
 	 * @param locationTrace trace line
 	 * @return ParsedLocationInfo object
 	 */
@@ -88,7 +87,16 @@ public class FortifyIssueLocationTraceDoubleClickListener implements IDoubleClic
 			if(currentPart.contains(".java")) {
 				String[] classAndLine = currentPart.replace("(","").replace(")", "").trim().split(".java");
 				toReturn.setClassName(classAndLine[0] + ".java");
-				toReturn.setLineNumber(classAndLine[1]);
+				String[] numberPart = classAndLine[1].split("");
+				StringBuilder lineNumberSB = new StringBuilder();
+				numberDetector: for(int i = 0 ; i < classAndLine[1].length(); i++) {
+					if(numberPart[i].matches("[0-9]+")) {
+						lineNumberSB.append(numberPart[i]);
+					} else {
+						break numberDetector;
+					}
+				}				
+				toReturn.setLineNumber(lineNumberSB.toString());
 			}			
 		}
 		return toReturn;

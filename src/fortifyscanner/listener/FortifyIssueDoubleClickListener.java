@@ -106,8 +106,7 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 	}
 	
 	/**
-	 * Parses location trace in the form of 
-	 * [className(line)], [className(line),...,causeClassName(causeLine)]...
+	 * Parses location trace in log trace of each issue written by source analyzer tool of fortify
 	 * @param locationTrace trace line
 	 * @return ParsedLocationInfo object
 	 */
@@ -120,7 +119,16 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 			if(currentPart.contains(".java")) {
 				String[] classAndLine = currentPart.replace("(","").replace(")", "").trim().split(".java");
 				toReturn.setClassName(classAndLine[0] + ".java");
-				toReturn.setLineNumber(classAndLine[1]);
+				String[] numberPart = classAndLine[1].split("");
+				StringBuilder lineNumberSB = new StringBuilder();
+				numberDetector: for(int i = 0 ; i < classAndLine[1].length(); i++) {
+					if(numberPart[i].matches("[0-9]+")) {
+						lineNumberSB.append(numberPart[i]);
+					} else {
+						break numberDetector;
+					}
+				}				
+				toReturn.setLineNumber(lineNumberSB.toString());
 			}			
 		}
 		return toReturn;
