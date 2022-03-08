@@ -107,7 +107,7 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 	
 	/**
 	 * Parses location trace in log trace of each issue written by source analyzer tool of fortify
-	 * @param locationTrace trace line
+	 * @param locationTrace one line in location trace log
 	 * @return ParsedLocationInfo object
 	 */
 	public ParsedLocationInfo parseLocationTrace(String locationTrace) {

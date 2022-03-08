@@ -1,7 +1,9 @@
 package fortifyscanner.views;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -167,11 +169,26 @@ public class FortifyConsoleView extends ViewPart {
 	}
 
 	class SearchResultSortListener extends SelectionAdapter {
+		
+		public static final String DESCRIPTION_KEY = "Description";
+		public static final String ID_KEY = "ID";
+		public static final String SEVERITY_KEY = "Severity";
+		public static final String LOCATION_KEY = "Location";
+		public static final String REASON_KEY = "Reason";
+		public static final String TYPE_KEY = "Type";
+		
+		private Map<String, Integer> sortAscendingOrDescending = new HashMap<>();				
 
 		private String sortType;
 
 		public SearchResultSortListener(String sortType) {
 			this.sortType = sortType;
+			sortAscendingOrDescending.put(DESCRIPTION_KEY, 0);
+			sortAscendingOrDescending.put(ID_KEY, 0);
+			sortAscendingOrDescending.put(SEVERITY_KEY, 0);
+			sortAscendingOrDescending.put(LOCATION_KEY, 0);
+			sortAscendingOrDescending.put(REASON_KEY, 0);
+			sortAscendingOrDescending.put(TYPE_KEY, 0);
 		}
 
 		@Override
@@ -179,23 +196,59 @@ public class FortifyConsoleView extends ViewPart {
 			
 			List<FortifyIssueDto> issues = data.getIssues();			
 			switch (sortType) {
-			case "Description":
-				issues.sort(Comparator.comparing(FortifyIssueDto::getDescription));
+			case DESCRIPTION_KEY:
+				if(sortAscendingOrDescending.get(DESCRIPTION_KEY) == 0) {
+					issues.sort(Comparator.comparing(FortifyIssueDto::getDescription));
+					sortAscendingOrDescending.put(DESCRIPTION_KEY, 1);
+				} else { // ==1
+					issues.sort(Comparator.comparing(FortifyIssueDto::getDescription, Comparator.reverseOrder()));
+					sortAscendingOrDescending.put(DESCRIPTION_KEY, 0);
+				}
 				break;
-			case "ID":
-				issues.sort(Comparator.comparing(FortifyIssueDto::getId));
+			case ID_KEY:
+				if(sortAscendingOrDescending.get(ID_KEY) == 0) {
+					issues.sort(Comparator.comparing(FortifyIssueDto::getId));
+					sortAscendingOrDescending.put(ID_KEY, 1);
+				} else { // ==1
+					issues.sort(Comparator.comparing(FortifyIssueDto::getId, Comparator.reverseOrder()));
+					sortAscendingOrDescending.put(ID_KEY, 0);
+				}				
 				break;
-			case "Severity":
-				issues.sort(Comparator.comparing(FortifyIssueDto::getSeverity));
+			case SEVERITY_KEY:
+				if(sortAscendingOrDescending.get(SEVERITY_KEY) == 0) {
+					issues.sort(Comparator.comparing(FortifyIssueDto::getSeverity));
+					sortAscendingOrDescending.put(SEVERITY_KEY, 1);
+				} else { // ==1
+					issues.sort(Comparator.comparing(FortifyIssueDto::getSeverity, Comparator.reverseOrder()));
+					sortAscendingOrDescending.put(SEVERITY_KEY, 0);
+				}				
 				break;
-			case "Location":
-				issues.sort(Comparator.comparing(FortifyIssueDto::getLocation));
+			case LOCATION_KEY:
+				if(sortAscendingOrDescending.get(LOCATION_KEY) == 0) {
+					issues.sort(Comparator.comparing(FortifyIssueDto::getLocation));
+					sortAscendingOrDescending.put(LOCATION_KEY, 1);
+				} else { // ==1
+					issues.sort(Comparator.comparing(FortifyIssueDto::getLocation, Comparator.reverseOrder()));
+					sortAscendingOrDescending.put(LOCATION_KEY, 0);
+				}				
 				break;
-			case "Reason":
-				issues.sort(Comparator.comparing(FortifyIssueDto::getReason));
+			case REASON_KEY:
+				if(sortAscendingOrDescending.get(REASON_KEY) == 0) {
+					issues.sort(Comparator.comparing(FortifyIssueDto::getReason));
+					sortAscendingOrDescending.put(REASON_KEY, 1);
+				} else { // ==1
+					issues.sort(Comparator.comparing(FortifyIssueDto::getReason, Comparator.reverseOrder()));
+					sortAscendingOrDescending.put(REASON_KEY, 0);
+				}				
 				break;
-			case "Type":
-				issues.sort(Comparator.comparing(FortifyIssueDto::getType));
+			case TYPE_KEY:
+				if(sortAscendingOrDescending.get(TYPE_KEY) == 0) {
+					issues.sort(Comparator.comparing(FortifyIssueDto::getType));
+					sortAscendingOrDescending.put(TYPE_KEY, 1);
+				} else { // ==1
+					issues.sort(Comparator.comparing(FortifyIssueDto::getType, Comparator.reverseOrder()));
+					sortAscendingOrDescending.put(TYPE_KEY, 0);
+				}				
 				break;
 			}
 			viewer.setInput(data);
