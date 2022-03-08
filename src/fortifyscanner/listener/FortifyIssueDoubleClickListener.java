@@ -57,8 +57,8 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 		}		
 		ParsedLocationInfo locationInfo = parseLocationTrace(issue.getLocation());
 		
-		String descriptionDetailInIssueDetatilViewHedaer = issue.getDescription() == null || issue.getDescription().trim().length() == 0 ? "" : " (" + issue.getDescription() + ")"; 
-		updateFortifyIssueDetailView(issue.getLocationTrace(), issue.getId() + " : " + issue.getReason() + descriptionDetailInIssueDetatilViewHedaer);
+		String descriptionDetailInIssueDetatilViewHedaer = issue.getDescription() == null || issue.getDescription().trim().length() == 0 ? "" : " (" + issue.getDescription().toUpperCase() + ")"; 
+		updateFortifyIssueDetailView(issue.getLocationTrace(), issue.getId() + " : " + (issue.getReason() != null ? issue.getReason().toUpperCase() : "") + descriptionDetailInIssueDetatilViewHedaer);
 		
 		String classWithPackagePath = locationInfo.getClassName();
 		String line = locationInfo.getLineNumber();		
