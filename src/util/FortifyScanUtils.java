@@ -24,6 +24,8 @@ import model.FortifyIssueDto;
 /** 
  * A utility that facilitates fortify scans (using command line command) and mapping results into proper objects.
  * 
+ * TODO: This utility will be simplified using directly the Fortify Issue DTO. Currently contains irrelevant code snippets. I am aware of that...
+ * 
  * @author Umut
  *
  */
@@ -59,8 +61,7 @@ public class FortifyScanUtils {
 				completeLog.append(responseLineOfCommand).append(System.lineSeparator());		    
 			}
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Exception Running Source Analyzer on OS Command level:  ", e);
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Exception Running Source Analyzer on OS Command level:  ", e);			
 		}
 		LOGGER.info(completeLog.toString());
 		ConsoleUtils.printMessageToConsoleWithNameConsole(completeLog.toString());
@@ -151,8 +152,7 @@ public class FortifyScanUtils {
 			process2.waitFor();
 			
 		} catch (IOException | InterruptedException e) {
-			LOGGER.log(Level.SEVERE, "Exception Running PDF report generation in the background:  ", e);
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Exception Running PDF report generation in the background:  ", e);			
 		} 
 	}
 	

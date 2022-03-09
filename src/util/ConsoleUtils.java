@@ -11,7 +11,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
 import components.RenameableMessageConsole;
 
 /**
- * Contains utility function that are involved with eclipse Console output.
+ * Contains utility functions to output to Eclipse IDE's console.
  * 
  * @author Umut
  *
@@ -70,8 +70,6 @@ public class ConsoleUtils {
 		MessageConsoleStream out = currentConsole.newMessageStream();
 		PrintStream printStream = new PrintStream(out, true);
 		printStream.println(message);
-		//out.println(message);
-		//out.setActivateOnWrite(true);		
 	}
 
 	/**
@@ -89,7 +87,6 @@ public class ConsoleUtils {
 		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
 		ConsolePlugin.getDefault().getConsoleManager().showConsoleView(console);
 		MessageConsoleStream stream = console.newMessageStream();
-		stream.println(message);
-		stream.println("...Scan completed successfully...");
+		stream.println(message);		
 	}
 }
