@@ -8,10 +8,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import util.ConsoleUtils;
-import util.FortifyScanUtils;
 
 /**
  * Internal Browser Utility for detailed vulnerability explanations for Fortify Issues.
+ * Requires an internet connection to serve data.
+ * 
  * @author Umut
  *
  */

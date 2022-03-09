@@ -23,12 +23,24 @@ import fortifyscanner.listener.FortifyIssueDoubleClickListener;
 import model.FortifyIssueDto;
 import model.FortifyScanResultDto;
 
+/**
+ * Custom View Class named as Fortify On the Fly.
+ * Can be opened via the menu: Window -> Show View -> Fortify-On-the-Fly.
+ * 
+ * @author Umut
+ *
+ */
 public class FortifyConsoleView extends ViewPart {
 
 	private TableViewer viewer;
 	private Table table;
 	private FortifyScanResultDto data;
 
+	/**
+	 * Refreshes the data of the Custom View
+	 * 
+	 * @param newData new data of the view.
+	 */
 	public void refreshFortifyConsoleData(FortifyScanResultDto newData) {
 		data = newData;
 		viewer.setInput(data);
@@ -45,8 +57,7 @@ public class FortifyConsoleView extends ViewPart {
 
 		viewer.setContentProvider(new FortifyConsoleContentProvider());
 		viewer.setLabelProvider(new FortifyConsoleLabelProvider());
-
-		//viewer.setContentProvider(new FortifyConsoleContentProvider());
+		
 		viewer.setInput(data);
 		viewer.addDoubleClickListener(new FortifyIssueDoubleClickListener(viewer));
 	}
@@ -73,31 +84,31 @@ public class FortifyConsoleView extends ViewPart {
 		column = new TableColumn(table, SWT.LEFT, 1);
 		column.setText("Severity");
 		column.setWidth(100);
-		column.addSelectionListener(new SearchResultSortListener("Severity"));
+		column.addSelectionListener(new SearchResultSortListener("Criticality"));
 
 		// LOCATION
 		column = new TableColumn(table, SWT.LEFT, 2);
 		column.setText("Location");
 		column.setWidth(200);
-		column.addSelectionListener(new SearchResultSortListener("Location"));
+		column.addSelectionListener(new SearchResultSortListener("Path"));
 
 		// REASON
 		column = new TableColumn(table, SWT.LEFT, 3);
 		column.setText("Reason");
 		column.setWidth(250);
-		column.addSelectionListener(new SearchResultSortListener("Reason"));
+		column.addSelectionListener(new SearchResultSortListener("Category"));
 
 		// DESCRIPTION
 		column = new TableColumn(table, SWT.LEFT, 4);
 		column.setText("Description");
 		column.setWidth(450);
-		column.addSelectionListener(new SearchResultSortListener("Description"));
+		column.addSelectionListener(new SearchResultSortListener("Subcategory"));
 
 		// TYPE
 		column = new TableColumn(table, SWT.LEFT, 5);
 		column.setText("Type");
 		column.setWidth(140);
-		column.addSelectionListener(new SearchResultSortListener("Type"));
+		column.addSelectionListener(new SearchResultSortListener("Analyzer"));
 	}
 
 	@Override
@@ -105,6 +116,12 @@ public class FortifyConsoleView extends ViewPart {
 		viewer.getControl().setFocus();
 	}
 
+	/**
+	 * Content provider - Content converter from a list of data into Array of data to fill the custom table.
+	 * 
+	 * @author Umut
+	 *
+	 */
 	class FortifyConsoleContentProvider implements IStructuredContentProvider {
 
 		@Override
@@ -114,6 +131,12 @@ public class FortifyConsoleView extends ViewPart {
 		}
 	}
 
+	/**
+	 * Info mapper for the columns.
+	 * 
+	 * @author Umut
+	 *
+	 */
 	class FortifyConsoleLabelProvider implements ITableLabelProvider {
 
 		@Override
@@ -168,6 +191,12 @@ public class FortifyConsoleView extends ViewPart {
 		}
 	}
 
+	/**
+	 * Sorter Utility for each data attribute, triggered when the Column Headers is clicked.
+	 * 
+	 * @author Umut
+	 *
+	 */
 	class SearchResultSortListener extends SelectionAdapter {
 		
 		public static final String DESCRIPTION_KEY = "Description";

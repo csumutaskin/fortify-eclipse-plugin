@@ -4,19 +4,16 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * The activator class controls the plug-in life cycle
+ * The activator that controls the plug-in life cycle.
  */
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "FortifyScanner"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "FortifyScanner";
 
 	// The shared instance
 	private static Activator plugin;
-	
-	/**
-	 * The constructor
-	 */
+
 	public Activator() {
 	}
 

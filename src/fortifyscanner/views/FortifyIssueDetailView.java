@@ -16,6 +16,13 @@ import org.eclipse.ui.part.ViewPart;
 
 import fortifyscanner.listener.FortifyIssueLocationTraceDoubleClickListener;
 
+/**
+ * Custom View Class named as Fortify Issue Trace.
+ * Can be opened via the menu: Window -> Show View -> Fortify Issue Trace.
+ * 
+ * @author Umut
+ *
+ */
 public class FortifyIssueDetailView extends ViewPart {
 
 	private TableViewer viewer;
@@ -23,6 +30,11 @@ public class FortifyIssueDetailView extends ViewPart {
 	private List<String> data;
 	private TableColumn logColumnWithHeader;
 
+	/**
+	 * Refreshes the data and the table header with the given parameters
+	 * @param locationLog new list of path logs (Think of location as a stack trace, each line can be seen as a content in this list).
+	 * @param infoHeader new table header
+	 */
 	public void refreshFortifyConsoleData(List<String> locationLog, String infoHeader) {
 		data = locationLog;
 		viewer.setInput(data);
@@ -55,7 +67,6 @@ public class FortifyIssueDetailView extends ViewPart {
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 
-		// ID
 		logColumnWithHeader = new TableColumn(table, SWT.LEFT, 0);		
 		logColumnWithHeader.setResizable(false);		
 		logColumnWithHeader.setWidth(3000);		
@@ -76,6 +87,12 @@ public class FortifyIssueDetailView extends ViewPart {
 		}
 	}
 
+	/**
+	 * Label Data Provider for the table component.
+	 * 
+	 * @author Umut
+	 *
+	 */
 	class FortifyIssueDetailLabelProvider implements ITableLabelProvider {
 
 		@Override
