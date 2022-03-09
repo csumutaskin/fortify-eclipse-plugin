@@ -36,12 +36,19 @@ public class FileReportHandler extends AbstractHandler {
 	private static final Logger LOGGER = Logger.getLogger(FileReportHandler.class.getName());
 	private List<ProjectDto> allWorkspaceProjects;
 
+	/**
+	 * Triggers the process to create the .fpr file than the human readable .pdf file from
+	 * this .fpr (Uses System variable: user.home / Desktop) path to set the base folder
+	 * to create these reports. (Tested for Windows 10 operating system. Not tested for Linux or MacOS).
+	 * @param event execution event.
+	 */
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		triggerWizard(event);
 		return null;
 	}
 
+	// Report Creation flow. 
 	private void triggerWizard(ExecutionEvent event) {
 		try {
 			allWorkspaceProjects = WorkspaceUtils.getAllProjectSummaryInfoInCurrentWorkspace();
@@ -56,6 +63,7 @@ public class FileReportHandler extends AbstractHandler {
 		}
 	}
 
+	// Creates the Project List of Workspace dialog (pop up) and waits for the end user's answer. For Windows OSs make sure the Fortify/bin folder is set in PATH. 
 	private int openChooseProjectDialog() throws IOException {
 		int responseCode = -1;
 		String title = "Choose a Project:";
@@ -88,12 +96,13 @@ public class FileReportHandler extends AbstractHandler {
 		return responseCode;
 	}
 
+	//An informative message dialog after the report is succesfully created on user Desktop.
 	private void openOKPressedDialog(ExecutionEvent event) {
 		IWorkbenchWindow window;
 		try {
 			window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE ,"Unexpected thing happened with the project dialog..", e);			
 			return;
 		}
 		MessageDialog.openInformation(window.getShell(), "Report Generated", "Please check your desktop for the generated report.");

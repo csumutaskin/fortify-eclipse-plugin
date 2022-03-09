@@ -33,7 +33,15 @@ import util.WorkspaceUtils;
 
 /**
  * Handler that is triggered if end user wishes the Fortify report on Eclipse IDE itself.
- * Generated report can be seen on a custom view on IDE but with less info than a generated PDF report.
+ * Generated report can be seen on 2 custom views (Fortify on the fly and Fortify Issue Trace) on IDE 
+ * and suggestions to fix the issue is given in an Internal Fortify Taxonomy Browser with details.
+ * Internet Connection is required for the browser to serve the recommendation for the given issue.
+ * 
+ * Use the custom views to see details: Window -> Show View:
+ * 
+ * Fortify On-the-Fly: Issue table for the detected problems
+ * Fortify Issue Trace: If a single issue is double clicked log trace is of the issue is given here.
+ * Fortify Taxonomy: Contains abstract and recommendations (details) about the current issue investigated.
  * 
  * @author Umut
  *
@@ -43,15 +51,16 @@ public class OnTheFlyHandler extends AbstractHandler {
 	private static final Logger LOGGER = Logger.getLogger(OnTheFlyHandler.class.getName());
 	private List<ProjectDto> allWorkspaceProjects;
 
-	public OnTheFlyHandler() {
-	}	
-	
+	/**
+	 * Executes an IDE based report for Fortify SCA issues on custom views.
+	 */
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		triggerWizard(event);
 		return null;
 	}
 	
+	// Wizard that creates the on the fly report.
 	private void triggerWizard(ExecutionEvent event) {
 		try {
 			allWorkspaceProjects = WorkspaceUtils.getAllProjectSummaryInfoInCurrentWorkspace();
@@ -99,6 +108,7 @@ public class OnTheFlyHandler extends AbstractHandler {
         return responseCode;
 	}	
 	
+	// Updates the custom Fortify On the Fly view using the issues that are detected.
 	private void updateFortifyConsoleView(List<FortifyIssueDto> scanned) {
 		IWorkbenchWindow workbench = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = workbench.getActivePage();
@@ -109,16 +119,18 @@ public class OnTheFlyHandler extends AbstractHandler {
 			fscanResult.setIssues(scanned);
 			fcv.refreshFortifyConsoleData(fscanResult);
 		} catch (PartInitException e) {
+        	LOGGER.log(Level.SEVERE, "A problem occurred while Fortify On the Fly console data is being updated and shown to the end user.", e);
 			e.printStackTrace();
 		}
 	}
 	
+	// Information message dialog for the user to inform issues are logged to the Fortify on the fly console.
 	private void openOKPressedDialog(ExecutionEvent event) {
 		IWorkbenchWindow window;
 		try {
 			window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		} catch (ExecutionException e) {			
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "A problem occurred while informing end user about the process has already finished", e);
 			return;
 		}
 		MessageDialog.openInformation(window.getShell(), "On-the-fly Report", "FortifyScanner issues are logged to the console.");
