@@ -60,9 +60,7 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 		
 		String descriptionDetailInIssueDetatilViewHedaer = issue.getDescription() == null || issue.getDescription().trim().length() == 0 ? "" : " (" + issue.getDescription().toUpperCase() + ")"; 
 		updateFortifyIssueDetailView(issue.getLocationTrace(), issue.getId() + " : " + (issue.getReason() != null ? issue.getReason().toUpperCase() : "") + descriptionDetailInIssueDetatilViewHedaer);
-		
-		//////
-		updateVulncatBrowserView("");
+		updateVulncatBrowserView(issue.getReason());
 		
 		String classWithPackagePath = locationInfo.getClassName();
 		String line = locationInfo.getLineNumber();		
@@ -117,7 +115,7 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 			VulncatBrowserView vbv = (VulncatBrowserView)browserView;
 			vbv.openURLByCategory(category);			
 		} catch (PartInitException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "An exception -PartInitException- occurred while opening a new Fortify Taxonomy Browser View", e);
 		}
 	}
 	

@@ -58,7 +58,7 @@ public class VulncatBrowserView extends ViewPart {
 		if(category == null) {
 			return;
 		}
-		category = category.trim().replace("\\s+", "+");
+		category = category.trim().replaceAll("\\s+", "+");
 		String URL = VULNCAT_QUERY_URL + "?" + VULNCAT_CATEGORY_QUERY_PARAM +"=" + category;
 		openURL(URL);		
 	}
