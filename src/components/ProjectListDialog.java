@@ -15,9 +15,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Popup dialog used to choose a project in current workspace. Project list is
- * given with radio button group, to allow end user to choose only one among
- * workspace projects.
+ * Pop up used to choose a project in current workspace. Project list in current
+ * eclipse workspace is given as a list each preceded with a radio button, 
+ * to allow end user to choose only one among all for fortify static code analysis.
  * 
  * @author Umut
  */
@@ -42,6 +42,9 @@ public class ProjectListDialog extends TitleAreaDialog {
 		this.messageType = messageType;
 	}
 
+	/**
+	 * Initializes the popup.
+	 */
 	@Override
 	public void create() {
 		super.create();
@@ -49,6 +52,10 @@ public class ProjectListDialog extends TitleAreaDialog {
 		this.getShell().setSize(getInitialSize());
 	}
 
+	/**
+	 * Creates and visualizes the pop up.
+	 * @param parent parent container. 
+	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite area = (Composite) super.createDialogArea(parent);
@@ -83,7 +90,7 @@ public class ProjectListDialog extends TitleAreaDialog {
 	}
 
 	/**
-	 * Triggers when confirm is pressed in jface.dialog
+	 * Triggers when confirm button is pressed in current dialog.
 	 */
 	@Override
 	protected void okPressed() {

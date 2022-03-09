@@ -15,6 +15,10 @@ public class RenameableMessageConsole extends MessageConsole{
 		super(name, imageDescriptor);
 	}
 	
+	/**
+	 * Sets console name with the given string.
+	 * @param newName string to name the current console.
+	 */
 	public void setConsoleName(String newName) {
 		super.setName(newName);
 	}
