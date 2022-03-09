@@ -20,6 +20,7 @@ public class VulncatBrowserView extends ViewPart {
 	private static final Logger LOGGER = Logger.getLogger(VulncatBrowserView.class.getName());	
 	public static final String VULNCAT_QUERY_URL = "https://vulncat.fortify.com/en/weakness";
 	public static final String VULNCAT_CATEGORY_QUERY_PARAM = "category";
+	public static final String VULNCAT_SUBCATEGORY_QUERY_PARAM = "q";
 	private Browser browser = null;
 
 	/**
@@ -53,17 +54,20 @@ public class VulncatBrowserView extends ViewPart {
 	/**
 	 * Browses the given URL using vulncat category field.
 	 * @param category category vulnerability string to be searched
+	 * @param subCategory sub category vulnerability string to be searched
 	 */
-	public void openURLByCategory(String category) {		
+	public void openURLByCategory(String category, String subCategory) {		
 		if(category == null) {
 			return;
 		}
 		category = category.trim().replaceAll("\\s+", "+");
-		String URL = VULNCAT_QUERY_URL + "?" + VULNCAT_CATEGORY_QUERY_PARAM +"=" + category;
+		String urlPostFix = "";
+		if(subCategory != null && !"".equals(subCategory.trim())) {
+			urlPostFix = "&q=" + subCategory.trim(); 
+		}
+		String URL = VULNCAT_QUERY_URL + "?" + VULNCAT_CATEGORY_QUERY_PARAM +"=" + category + urlPostFix;		
 		openURL(URL);		
-	}
-	
-	
+	}	
 	
 	/**
 	 * Sets focus on frame.

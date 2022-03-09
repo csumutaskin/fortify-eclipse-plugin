@@ -60,7 +60,7 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 		
 		String descriptionDetailInIssueDetatilViewHedaer = issue.getDescription() == null || issue.getDescription().trim().length() == 0 ? "" : " (" + issue.getDescription().toUpperCase() + ")"; 
 		updateFortifyIssueDetailView(issue.getLocationTrace(), issue.getId() + " : " + (issue.getReason() != null ? issue.getReason().toUpperCase() : "") + descriptionDetailInIssueDetatilViewHedaer);
-		updateVulncatBrowserView(issue.getReason());
+		updateVulncatBrowserView(issue.getReason(), issue.getDescription());
 		
 		String classWithPackagePath = locationInfo.getClassName();
 		String line = locationInfo.getLineNumber();		
@@ -107,13 +107,13 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 		}
 	}
 	
-	private void updateVulncatBrowserView(String category) {
+	private void updateVulncatBrowserView(String category, String subCategory) {
 		IWorkbenchWindow workbench = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = workbench.getActivePage();
 		try {
 			IViewPart browserView = page.showView("fortifyscanner.views.VulncatBrowserView");
 			VulncatBrowserView vbv = (VulncatBrowserView)browserView;
-			vbv.openURLByCategory(category);			
+			vbv.openURLByCategory(category, subCategory);			
 		} catch (PartInitException e) {
 			LOGGER.log(Level.SEVERE, "An exception -PartInitException- occurred while opening a new Fortify Taxonomy Browser View", e);
 		}
