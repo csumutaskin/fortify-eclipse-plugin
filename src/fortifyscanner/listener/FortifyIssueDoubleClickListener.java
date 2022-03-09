@@ -34,7 +34,7 @@ import model.ParsedLocationInfo;
 import util.FortifyScanUtils;
 
 /**
- * On double click listener for fortify
+ * Double Click Listener for Any Line on Fortify On-the-Fly console.
  * 
  * @author Umut
  *
@@ -49,19 +49,60 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 		this.tableViewer = tableViewer;
 	}
 
+	/**
+	 * Flow when double click is done on a line.
+	 */
 	@Override
 	public void doubleClick(DoubleClickEvent event) {
 		IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
+
+		//Sets the selected issue on the view (to keep issue information)
 		FortifyIssueDto issue = (FortifyIssueDto) selection.getFirstElement();
 		if (issue == null) {
 			return;
 		}		
 		ParsedLocationInfo locationInfo = parseLocationTrace(issue.getLocation());
 		
-		String descriptionDetailInIssueDetatilViewHedaer = issue.getDescription() == null || issue.getDescription().trim().length() == 0 ? "" : " (" + issue.getDescription().toUpperCase() + ")"; 
+		String descriptionDetailInIssueDetatilViewHedaer = issue.getDescription() == null || issue.getDescription().trim().length() == 0 ? "" : " (" + issue.getDescription().toUpperCase() + ")";
+		
+		//Refreshes the Fortify Issue Trace view with all the logs that cause the selected vulnerability from Fortify On the Fly view.
 		updateFortifyIssueDetailView(issue.getLocationTrace(), issue.getId() + " : " + (issue.getReason() != null ? issue.getReason().toUpperCase() : "") + descriptionDetailInIssueDetatilViewHedaer);
+		
+		//Opens an internal Eclipse Browser browsing at the vulncat fortify page to take the necessary recommendations about the issue.
 		updateVulncatBrowserView(issue.getReason(), issue.getDescription());
 		
+		// Focuses the cursor on where (the java file) the issue is detected.
+		focusCursorOnIssueClassAndIssueLine(locationInfo);
+	}
+
+	// Updates data about trace log on 2nd custom view of the plugin: Fortify Issue Trace
+	private void updateFortifyIssueDetailView(List<String> locationLog, String infoHeader) {
+		IWorkbenchWindow workbench = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchPage page = workbench.getActivePage();
+		try {
+			IViewPart viewPart = page.showView("fortifyscanner.views.FortifyIssueDetailView");
+			FortifyIssueDetailView fidv = (FortifyIssueDetailView)viewPart;
+			fidv.refreshFortifyConsoleData(locationLog, infoHeader);
+		} catch (PartInitException e) {
+			LOGGER.log(Level.SEVERE, "An exception -PartInitException- occurred while opening a new Fortify Issue Detail View", e);			
+		}
+	}
+	
+	// Updates recommendations about the issue from fortify vulncat page.
+	private void updateVulncatBrowserView(String category, String subCategory) {
+		IWorkbenchWindow workbench = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchPage page = workbench.getActivePage();
+		try {
+			IViewPart browserView = page.showView("fortifyscanner.views.VulncatBrowserView");
+			VulncatBrowserView vbv = (VulncatBrowserView)browserView;
+			vbv.openURLByCategory(category, subCategory);			
+		} catch (PartInitException e) {
+			LOGGER.log(Level.SEVERE, "An exception -PartInitException- occurred while opening a new Fortify Taxonomy Browser View", e);
+		}
+	}
+	
+	// Sets cursor focused on the issue line (on related java file).
+	private void focusCursorOnIssueClassAndIssueLine(ParsedLocationInfo locationInfo) {
 		String classWithPackagePath = locationInfo.getClassName();
 		String line = locationInfo.getLineNumber();		
 		String fullPath = FortifyScanUtils.PROJECT_ROOT_PATH + "/" + classWithPackagePath;		
@@ -92,30 +133,6 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 		} else {
 			LOGGER.log(Level.SEVERE, "A file with path " + fullPath + " can not be found in file system, please check if the path is correct, otherwise FortifyIssueDoubleClickListener parseLocationTrace() method might be containing a severe bug. Until it is fixed, go to the file and line manually on your IDE");
 			throw new RuntimeException(new FileNotFoundException());
-		}
-	}
-
-	private void updateFortifyIssueDetailView(List<String> locationLog, String infoHeader) {
-		IWorkbenchWindow workbench = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		IWorkbenchPage page = workbench.getActivePage();
-		try {
-			IViewPart viewPart = page.showView("fortifyscanner.views.FortifyIssueDetailView");
-			FortifyIssueDetailView fidv = (FortifyIssueDetailView)viewPart;
-			fidv.refreshFortifyConsoleData(locationLog, infoHeader);
-		} catch (PartInitException e) {
-			LOGGER.log(Level.SEVERE, "An exception -PartInitException- occurred while opening a new Fortify Issue Detail View", e);			
-		}
-	}
-	
-	private void updateVulncatBrowserView(String category, String subCategory) {
-		IWorkbenchWindow workbench = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		IWorkbenchPage page = workbench.getActivePage();
-		try {
-			IViewPart browserView = page.showView("fortifyscanner.views.VulncatBrowserView");
-			VulncatBrowserView vbv = (VulncatBrowserView)browserView;
-			vbv.openURLByCategory(category, subCategory);			
-		} catch (PartInitException e) {
-			LOGGER.log(Level.SEVERE, "An exception -PartInitException- occurred while opening a new Fortify Taxonomy Browser View", e);
 		}
 	}
 	

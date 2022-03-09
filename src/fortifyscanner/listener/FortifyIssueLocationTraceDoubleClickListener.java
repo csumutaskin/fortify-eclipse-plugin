@@ -23,6 +23,13 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import model.ParsedLocationInfo;
 import util.FortifyScanUtils;
 
+/**
+ * Double Click Listener for any item double click event on custom "Fortify Issue Trace" view.
+ * Double Click event on this view only focuses the cursor on editor on the line and class file where the issue occurred.
+ * 
+ * @author Umut
+ *
+ */
 public class FortifyIssueLocationTraceDoubleClickListener implements IDoubleClickListener {
 
 	private static final Logger LOGGER = Logger.getLogger(FortifyIssueLocationTraceDoubleClickListener.class.getName());
@@ -33,6 +40,10 @@ public class FortifyIssueLocationTraceDoubleClickListener implements IDoubleClic
 		this.tableViewer = tableViewer;
 	}
 
+	/**
+	 * Double Click Event handler method.
+	 * @param event event to be handled
+	 */
 	@Override
 	public void doubleClick(DoubleClickEvent event) {
 		IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
@@ -47,6 +58,7 @@ public class FortifyIssueLocationTraceDoubleClickListener implements IDoubleClic
 		String fullPath = FortifyScanUtils.PROJECT_ROOT_PATH + "/" + classWithPackagePath;		
 		File fileToOpen = new File(fullPath);
 
+		//Opens the java file and sets the cursor on the line where the issue is located.
 		if (fileToOpen.exists() && fileToOpen.isFile()) {
 			IFileStore fileStore = EFS.getLocalFileSystem().getStore(fileToOpen.toURI());
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
