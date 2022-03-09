@@ -63,6 +63,7 @@ public class FortifyScanUtils {
 			e.printStackTrace();
 		}
 		LOGGER.info(completeLog.toString());
+		ConsoleUtils.printMessageToConsoleWithNameConsole(completeLog.toString());
 		return convert(parsedReport);
 	}
 	

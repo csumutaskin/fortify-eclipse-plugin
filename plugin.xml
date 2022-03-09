@@ -97,6 +97,14 @@
             inject="true"
             name="Fortify Issue Trace">
       </view>
+	  <view
+            category="VulncatBrowserView"
+            class="fortifyscanner.views.VulncatBrowserView"
+            icon="icons/fortify.png"
+            id="fortifyscanner.views.VulncatBrowserView"
+            inject="true"
+            name="Fortify Taxonomy">
+      </view>
    </extension>
    <!-- Eclipse Perspective Additions -->
    <extension

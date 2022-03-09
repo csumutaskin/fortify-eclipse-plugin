@@ -28,6 +28,7 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import fortifyscanner.views.FortifyIssueDetailView;
+import fortifyscanner.views.VulncatBrowserView;
 import model.FortifyIssueDto;
 import model.ParsedLocationInfo;
 import util.FortifyScanUtils;
@@ -59,6 +60,9 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 		
 		String descriptionDetailInIssueDetatilViewHedaer = issue.getDescription() == null || issue.getDescription().trim().length() == 0 ? "" : " (" + issue.getDescription().toUpperCase() + ")"; 
 		updateFortifyIssueDetailView(issue.getLocationTrace(), issue.getId() + " : " + (issue.getReason() != null ? issue.getReason().toUpperCase() : "") + descriptionDetailInIssueDetatilViewHedaer);
+		
+		//////
+		updateVulncatBrowserView("");
 		
 		String classWithPackagePath = locationInfo.getClassName();
 		String line = locationInfo.getLineNumber();		
@@ -102,6 +106,18 @@ public class FortifyIssueDoubleClickListener implements IDoubleClickListener {
 			fidv.refreshFortifyConsoleData(locationLog, infoHeader);
 		} catch (PartInitException e) {
 			LOGGER.log(Level.SEVERE, "An exception -PartInitException- occurred while opening a new Fortify Issue Detail View", e);			
+		}
+	}
+	
+	private void updateVulncatBrowserView(String category) {
+		IWorkbenchWindow workbench = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchPage page = workbench.getActivePage();
+		try {
+			IViewPart browserView = page.showView("fortifyscanner.views.VulncatBrowserView");
+			VulncatBrowserView vbv = (VulncatBrowserView)browserView;
+			vbv.openURLByCategory(category);			
+		} catch (PartInitException e) {
+			e.printStackTrace();
 		}
 	}
 	
