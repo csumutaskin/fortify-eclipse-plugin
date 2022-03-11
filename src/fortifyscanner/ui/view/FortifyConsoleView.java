@@ -199,12 +199,13 @@ public class FortifyConsoleView extends ViewPart {
 	 */
 	class SearchResultSortListener extends SelectionAdapter {
 		
-		public static final String DESCRIPTION_KEY = "Description";
+		//I changed the column names to more well known distinguishers for fortify users.
+		public static final String DESCRIPTION_KEY = "Subcategory";
 		public static final String ID_KEY = "ID";
-		public static final String SEVERITY_KEY = "Severity";
-		public static final String LOCATION_KEY = "Location";
-		public static final String REASON_KEY = "Reason";
-		public static final String TYPE_KEY = "Type";
+		public static final String SEVERITY_KEY = "Criticality";
+		public static final String LOCATION_KEY = "Path";
+		public static final String REASON_KEY = "Category";
+		public static final String TYPE_KEY = "Analyzer";
 		
 		private Map<String, Integer> sortAscendingOrDescending = new HashMap<>();				
 
