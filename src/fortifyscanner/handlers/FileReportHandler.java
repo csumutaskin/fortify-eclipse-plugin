@@ -18,11 +18,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import components.ProjectListDialog;
-import model.ProjectDto;
-import util.ConsoleUtils;
-import util.FortifyScanUtils;
-import util.WorkspaceUtils;
+import fortifyscanner.model.ProjectDto;
+import fortifyscanner.ui.dialog.ProjectListDialog;
+import fortifyscanner.util.ConsoleUtils;
+import fortifyscanner.util.FortifyScanUtils;
+import fortifyscanner.util.WorkspaceUtils;
 
 /**
  * Handler that is triggered if end user wishes the Fortify report as a separate PDF file.

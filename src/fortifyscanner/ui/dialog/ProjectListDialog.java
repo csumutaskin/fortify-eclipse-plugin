@@ -1,4 +1,4 @@
-package components;
+package fortifyscanner.ui.dialog;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package util;
+package fortifyscanner.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
-import model.FortifyIssueDto;
+import fortifyscanner.model.FortifyIssueDto;
 
 /** 
  * A utility that facilitates fortify scans (using command line command) and mapping results into proper objects.
@@ -45,6 +45,7 @@ public class FortifyScanUtils {
 	 */
 	public static List<FortifyIssueDto> scanOnTheFly(String fullProjectRootPathToScan) throws IOException {
 
+		parsedReport = new HashMap<>();
 		PROJECT_ROOT_PATH = null;
 		StringBuilder completeLog = new StringBuilder();
 		String currentIssueId = null;

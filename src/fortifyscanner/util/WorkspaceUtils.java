@@ -1,4 +1,4 @@
-package util;
+package fortifyscanner.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 
-import model.ProjectDto;
+import fortifyscanner.model.ProjectDto;
 
 /**
  * Contains all operations that are related with current workspace (Where the developer is currently working using eclipse IDE).

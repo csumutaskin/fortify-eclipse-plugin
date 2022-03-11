@@ -1,4 +1,4 @@
-package util;
+package fortifyscanner.util;
 
 import java.io.PrintStream;
 
@@ -8,7 +8,7 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
-import components.RenameableMessageConsole;
+import fortifyscanner.ui.console.RenameableMessageConsole;
 
 /**
  * Contains utility functions to output to Eclipse IDE's console.

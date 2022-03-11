@@ -20,8 +20,8 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import model.ParsedLocationInfo;
-import util.FortifyScanUtils;
+import fortifyscanner.model.ParsedLocationInfo;
+import fortifyscanner.util.FortifyScanUtils;
 
 /**
  * Double Click Listener for any item double click event on custom "Fortify Issue Trace" view.

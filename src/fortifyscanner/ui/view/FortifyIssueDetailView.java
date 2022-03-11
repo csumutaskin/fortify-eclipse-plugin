@@ -1,4 +1,4 @@
-package fortifyscanner.views;
+package fortifyscanner.ui.view;
 
 import java.util.List;
 

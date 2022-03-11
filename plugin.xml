@@ -83,7 +83,7 @@
       </category>
       <view
             category="FortifyScanner"
-            class="fortifyscanner.views.FortifyConsoleView"
+            class="fortifyscanner.ui.view.FortifyConsoleView"
             icon="icons/fortify.png"
             id="fortifyscanner.views.FortifyConsoleView"
             inject="true"
@@ -91,7 +91,7 @@
       </view>
       <view
             category="FortifyIssueDetailScanner"
-            class="fortifyscanner.views.FortifyIssueDetailView"
+            class="fortifyscanner.ui.view.FortifyIssueDetailView"
             icon="icons/fortify.png"
             id="fortifyscanner.views.FortifyIssueDetailView"
             inject="true"
@@ -99,7 +99,7 @@
       </view>
 	  <view
             category="VulncatBrowserView"
-            class="fortifyscanner.views.VulncatBrowserView"
+            class="fortifyscanner.ui.view.VulncatBrowserView"
             icon="icons/fortify.png"
             id="fortifyscanner.views.VulncatBrowserView"
             inject="true"

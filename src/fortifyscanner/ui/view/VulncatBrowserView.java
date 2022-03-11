@@ -1,4 +1,4 @@
-package fortifyscanner.views;
+package fortifyscanner.ui.view;
 
 import java.util.logging.Logger;
 
@@ -7,7 +7,7 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import util.ConsoleUtils;
+import fortifyscanner.util.ConsoleUtils;
 
 /**
  * Internal Browser Utility for detailed vulnerability explanations for Fortify Issues.

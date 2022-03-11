@@ -1,4 +1,4 @@
-package model;
+package fortifyscanner.model;
 
 /**
  * Contains a particular issue's Class Name and Line Number information.

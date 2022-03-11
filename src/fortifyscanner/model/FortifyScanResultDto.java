@@ -1,14 +1,19 @@
-package model;
+package fortifyscanner.model;
 
 import java.util.List;
 
 /** 
- * A parsed fortify scan result into proper fields.
+ * A DTO containing Bulk Information about:
+ * The project root path (scan path = root path of the project in workspace).
+ * issues: List of DTOs that contain issue information (See: {@link FortifyIssueDto})
  * @author Umut
  */
 public class FortifyScanResultDto {
 	
+	//Root path of the project
 	private String scannedPath;
+	
+	//Issues detected
 	private List<FortifyIssueDto> issues;
 	
 	public String getScannedPath() {

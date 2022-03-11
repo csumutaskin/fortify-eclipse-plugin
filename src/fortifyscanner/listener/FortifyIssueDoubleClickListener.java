@@ -27,11 +27,11 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import fortifyscanner.views.FortifyIssueDetailView;
-import fortifyscanner.views.VulncatBrowserView;
-import model.FortifyIssueDto;
-import model.ParsedLocationInfo;
-import util.FortifyScanUtils;
+import fortifyscanner.model.FortifyIssueDto;
+import fortifyscanner.model.ParsedLocationInfo;
+import fortifyscanner.ui.view.FortifyIssueDetailView;
+import fortifyscanner.ui.view.VulncatBrowserView;
+import fortifyscanner.util.FortifyScanUtils;
 
 /**
  * Double Click Listener for Any Line on Fortify On-the-Fly console.

@@ -1,4 +1,4 @@
-package components;
+package fortifyscanner.ui.console;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.console.MessageConsole;

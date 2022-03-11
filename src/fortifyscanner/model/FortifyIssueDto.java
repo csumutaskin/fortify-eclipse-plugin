@@ -1,10 +1,21 @@
-package model;
+package fortifyscanner.model;
 
 import java.util.List;
 
 /**
- * A parsed fortify issue DTO into proper fields
- * 
+ * A Fortify Issue DTO each containing necessary information of a Fortify Issue.
+ * Attributes indicate:
+ * </br>
+ * <ul>
+ * 	<li>id: Fortify SCA detected Issue ID.</li>
+ * 	<li>severity: Criticality of Fortify Issue. Low, Medium, High, Critical.</li>
+ * 	<li>reason: Category of Fortify Vulncat Taxonomy (Main Reason).</li>
+ * 	<li>location: Path Trace of the issue.</li>
+ * 	<li>locationTrace: Path Trace of the issue line by line (with nested occurrences path of the main issue).</li>
+ * 	<li>description: Sub Category Actually, can sometimes contain null info.</li>
+ * 	<li>type: analyzer e.g.: structural, dataflow....</li>
+ * </ul>
+ *  
  * @author Umut
  *
  */

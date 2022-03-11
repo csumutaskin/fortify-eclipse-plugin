@@ -1,4 +1,4 @@
-package fortifyscanner.views;
+package fortifyscanner.ui.view;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -20,8 +20,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
 import fortifyscanner.listener.FortifyIssueDoubleClickListener;
-import model.FortifyIssueDto;
-import model.FortifyScanResultDto;
+import fortifyscanner.model.FortifyIssueDto;
+import fortifyscanner.model.FortifyScanResultDto;
 
 /**
  * Custom View Class named as Fortify On the Fly.
