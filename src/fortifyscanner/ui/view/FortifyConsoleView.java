@@ -143,8 +143,7 @@ public class FortifyConsoleView extends ViewPart {
 					selectionListener.setSelectedFortifyIssueData(selectedItem);
 					table.setMenu(menu);
 				} else {
-					selectionListener.setSelectedFortifyIssueData(null);
-					table.setMenu(null);					
+					table.setMenu(null);										
 				}					
 			}
 		});		
