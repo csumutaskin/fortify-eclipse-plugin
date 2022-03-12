@@ -69,14 +69,16 @@ public class FortifyConsoleViewRightClickMenuSelectionListener extends Selection
 	
 	//Adds an ignored rule line to permanent db, new scas do not show the ignored rule from now on (for all projects).
 	private void ignoreRuleForThisWorkspaceProjectsAlways() {
-		Bundle bundle = FrameworkUtil.getBundle(getClass());
-		addIgnoreRuleToDbAtFolderPath(Platform.getStateLocation(bundle).toFile().getAbsolutePath());
+		//Bundle bundle = FrameworkUtil.getBundle(getClass());
+		//addIgnoreRuleToDbAtFolderPath(Platform.getStateLocation(bundle).toFile().getAbsolutePath());
+		addIgnoreRuleToDbAtFolderPath(DBUtils.WORKSPACE_DB_FOLDER_PATH);
 		ignoreRuleWithCategoryForThisScan();
 	}	
 	
 	//Adds an ignored rule line to workspace related db, new scas do not show the ignored rule from now on for that workspace.
 	private void ignoreRuleForAllProjectsAlways() {		
-		addIgnoreRuleToDbAtFolderPath(System.getProperty("user.home") + "/AppData/Local/Eclipse/FortifyScanner");
+		//addIgnoreRuleToDbAtFolderPath(System.getProperty("user.home") + "/AppData/Local/Eclipse/FortifyScanner");
+		addIgnoreRuleToDbAtFolderPath(DBUtils.USER_DB_FOLDER_PATH);
 		ignoreRuleWithCategoryForThisScan();
 	}
 	
