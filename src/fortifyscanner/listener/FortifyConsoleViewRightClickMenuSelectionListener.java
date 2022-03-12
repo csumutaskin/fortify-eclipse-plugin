@@ -17,6 +17,7 @@ import org.osgi.framework.FrameworkUtil;
 
 import fortifyscanner.model.FortifyIssueDto;
 import fortifyscanner.ui.view.FortifyConsoleView;
+import fortifyscanner.util.DBUtils;
 
 /**
  * Listener for right mouse click menu on Fortify On-the-Fly view.
@@ -83,7 +84,7 @@ public class FortifyConsoleViewRightClickMenuSelectionListener extends Selection
 	private boolean addIgnoreRuleToDbAtFolderPath(String folderPath) {
 		File workspaceFolder = new File(folderPath);
 		workspaceFolder.mkdirs();
-		String workspaceFortifyIgnoredRulesFilePath = workspaceFolder.getAbsolutePath() + "/IgnoredRulesList.db" ;
+		String workspaceFortifyIgnoredRulesFilePath = workspaceFolder.getAbsolutePath() + "/" + DBUtils.DB_FILE_NAME;
 		System.out.println(workspaceFortifyIgnoredRulesFilePath);
 			
 		File workspaceFortifyRulesFile = new File(workspaceFortifyIgnoredRulesFilePath);
