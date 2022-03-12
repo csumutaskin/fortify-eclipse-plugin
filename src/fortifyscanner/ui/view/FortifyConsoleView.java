@@ -30,6 +30,7 @@ import fortifyscanner.listener.FortifyConsoleViewRightClickMenuSelectionListener
 import fortifyscanner.listener.FortifyIssueDoubleClickListener;
 import fortifyscanner.model.FortifyIssueDto;
 import fortifyscanner.model.FortifyScanResultDto;
+import fortifyscanner.util.DBUtils;
 
 /**
  * Custom View Class named as Fortify On the Fly. Can be opened via the menu:
@@ -56,6 +57,9 @@ public class FortifyConsoleView extends ViewPart {
 	 */
 	public void refreshFortifyConsoleData(FortifyScanResultDto newData) {
 		data = newData;
+		List<FortifyIssueDto> issues = data.getIssues();
+		issues = DBUtils.eliminateIgnoredRulesAtWorkspaceScope(DBUtils.eliminateIgnoredRulesAtUserScope(issues));
+		data.setIssues(issues);
 		viewer.setInput(data);
 	}
 	

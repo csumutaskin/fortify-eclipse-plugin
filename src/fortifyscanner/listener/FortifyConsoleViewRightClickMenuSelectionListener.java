@@ -7,13 +7,10 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableItem;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
 
 import fortifyscanner.model.FortifyIssueDto;
 import fortifyscanner.ui.view.FortifyConsoleView;
