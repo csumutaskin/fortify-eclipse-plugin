@@ -58,6 +58,11 @@ public class FortifyConsoleView extends ViewPart {
 		viewer.setInput(data);
 	}
 	
+	/**
+	 * Removes given row from the output set and refreshes the view, does not create an ignore list so if scan is refreshed
+	 * ignored item/items re appear again.
+	 * @param rowToRemove row to remove
+	 */
 	public void removeDataFromResult(FortifyIssueDto rowToRemove) {
 		FortifyScanResultDto currentResult = (FortifyScanResultDto)viewer.getInput();
 		if(currentResult != null && currentResult.getIssues() != null) {
@@ -67,7 +72,12 @@ public class FortifyConsoleView extends ViewPart {
 		}
 	}
 	
-	@SuppressWarnings("unlikely-arg-type")
+	/**
+	 * Removes all rows having the given category and subcategory from the scan outputs. If scan is refreshed they
+	 * reappear again.
+	 * @param category category to remove
+	 * @param subCategory subcategory to remove (if null, all nulls are taken into consideration)
+	 */
 	public void removeDataWithCategoryAndSubCategoryFromResult(String category, String subCategory) {
 		FortifyScanResultDto currentResult = (FortifyScanResultDto)viewer.getInput();
 		if(currentResult != null && currentResult.getIssues() != null) {
