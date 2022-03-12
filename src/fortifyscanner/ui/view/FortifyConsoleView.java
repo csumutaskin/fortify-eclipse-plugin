@@ -40,9 +40,10 @@ import fortifyscanner.model.FortifyScanResultDto;
  */
 public class FortifyConsoleView extends ViewPart {
 
-	public static final String RIGHT_CLICK_MENU_ITEM_1_STR = "Ignore rule with ID for this scan";
-	public static final String RIGHT_CLICK_MENU_ITEM_2_STR = "Ignore rule with Category for this scan";
-	public static final String RIGHT_CLICK_MENU_ITEM_3_STR = "Ignore rule with Category for !all! projects";
+	public static final String RIGHT_CLICK_MENU_ITEM_1_STR = "Ignore Line just once";
+	public static final String RIGHT_CLICK_MENU_ITEM_2_STR = "Ignore Category just once";
+	public static final String RIGHT_CLICK_MENU_ITEM_3_STR = "Ignore Category in this Workspace";
+	public static final String RIGHT_CLICK_MENU_ITEM_4_STR = "Ignore Category for current O.S. User";
 	
 	private TableViewer viewer;
 	private Table table;
@@ -127,13 +128,16 @@ public class FortifyConsoleView extends ViewPart {
 		MenuItem menuItem1 = new MenuItem(menu, SWT.None);
 		MenuItem menuItem2 = new MenuItem(menu, SWT.None);
 		MenuItem menuItem3 = new MenuItem(menu, SWT.None);
+		MenuItem menuItem4 = new MenuItem(menu, SWT.None);
 		menuItem1.setText(RIGHT_CLICK_MENU_ITEM_1_STR);
 		menuItem2.setText(RIGHT_CLICK_MENU_ITEM_2_STR);
 		menuItem3.setText(RIGHT_CLICK_MENU_ITEM_3_STR);
+		menuItem4.setText(RIGHT_CLICK_MENU_ITEM_4_STR);
 		FortifyConsoleViewRightClickMenuSelectionListener selectionListener = new FortifyConsoleViewRightClickMenuSelectionListener(this);
 		menuItem1.addSelectionListener(selectionListener);
 		menuItem2.addSelectionListener(selectionListener);
 		menuItem3.addSelectionListener(selectionListener);
+		menuItem4.addSelectionListener(selectionListener);
 		
 		table.addListener(SWT.MouseDown, new Listener() {
 			@Override
