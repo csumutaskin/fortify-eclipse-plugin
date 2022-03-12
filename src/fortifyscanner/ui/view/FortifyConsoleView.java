@@ -1,5 +1,6 @@
 package fortifyscanner.ui.view;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -13,25 +14,36 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
 
+import fortifyscanner.listener.FortifyConsoleViewRightClickMenuSelectionListener;
 import fortifyscanner.listener.FortifyIssueDoubleClickListener;
 import fortifyscanner.model.FortifyIssueDto;
 import fortifyscanner.model.FortifyScanResultDto;
 
 /**
- * Custom View Class named as Fortify On the Fly.
- * Can be opened via the menu: Window -> Show View -> Fortify-On-the-Fly.
+ * Custom View Class named as Fortify On the Fly. Can be opened via the menu:
+ * Window -> Show View -> Fortify-On-the-Fly.
  * 
  * @author Umut
  *
  */
 public class FortifyConsoleView extends ViewPart {
 
+	public static final String RIGHT_CLICK_MENU_ITEM_1_STR = "Ignore rule with ID for this scan";
+	public static final String RIGHT_CLICK_MENU_ITEM_2_STR = "Ignore rule with Category for this scan";
+	public static final String RIGHT_CLICK_MENU_ITEM_3_STR = "Ignore rule with Category for !all! projects";
+	
 	private TableViewer viewer;
 	private Table table;
 	private FortifyScanResultDto data;
@@ -45,28 +57,94 @@ public class FortifyConsoleView extends ViewPart {
 		data = newData;
 		viewer.setInput(data);
 	}
+	
+	public void removeDataFromResult(FortifyIssueDto rowToRemove) {
+		FortifyScanResultDto currentResult = (FortifyScanResultDto)viewer.getInput();
+		if(currentResult != null && currentResult.getIssues() != null) {
+			List<FortifyIssueDto> currentIssues = currentResult.getIssues();
+			currentIssues.remove(rowToRemove);			
+			viewer.setInput(currentResult);
+		}
+	}
+	
+	@SuppressWarnings("unlikely-arg-type")
+	public void removeDataWithCategoryAndSubCategoryFromResult(String category, String subCategory) {
+		FortifyScanResultDto currentResult = (FortifyScanResultDto)viewer.getInput();
+		if(currentResult != null && currentResult.getIssues() != null) {
+			List<FortifyIssueDto> currentIssues = currentResult.getIssues();
+			List<Integer> indexesToRemove = new ArrayList<>();
+			int index = -1;
+			for(FortifyIssueDto current :  currentIssues) {
+				index++;
+				if(current.getReason().equals(category) && 
+						((subCategory == null && current.getDescription() == null) || 
+						  subCategory != null && subCategory.equals(current.getDescription()))) {
+					indexesToRemove.add(index);
+				}
+			}
+			indexesToRemove.sort(Comparator.reverseOrder());
+			for(int indexToRemove : indexesToRemove) {
+				currentIssues.remove(indexToRemove);
+			}						
+			viewer.setInput(currentResult);
+		}
+	}
 
 	@Override
 	public void createPartControl(Composite parent) {
 
 		int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
+
 		table = new Table(parent, style);
+		setUpMouseRightClickListenerOnTable();
+		
 		viewer = new TableViewer(table);
 
 		enrichTable(table, parent, viewer);
 
 		viewer.setContentProvider(new FortifyConsoleContentProvider());
 		viewer.setLabelProvider(new FortifyConsoleLabelProvider());
-		
+
 		viewer.setInput(data);
 		viewer.addDoubleClickListener(new FortifyIssueDoubleClickListener(viewer));
+	}
+
+	private void setUpMouseRightClickListenerOnTable() {
+		
+		Menu menu = new Menu(table);
+		table.setMenu(menu);
+				
+		MenuItem menuItem1 = new MenuItem(menu, SWT.None);
+		MenuItem menuItem2 = new MenuItem(menu, SWT.None);
+		MenuItem menuItem3 = new MenuItem(menu, SWT.None);
+		menuItem1.setText(RIGHT_CLICK_MENU_ITEM_1_STR);
+		menuItem2.setText(RIGHT_CLICK_MENU_ITEM_2_STR);
+		menuItem3.setText(RIGHT_CLICK_MENU_ITEM_3_STR);
+		FortifyConsoleViewRightClickMenuSelectionListener selectionListener = new FortifyConsoleViewRightClickMenuSelectionListener(this);
+		menuItem1.addSelectionListener(selectionListener);
+		menuItem2.addSelectionListener(selectionListener);
+		menuItem3.addSelectionListener(selectionListener);
+		
+		table.addListener(SWT.MouseDown, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				TableItem selectedItem = table.getItem(new Point(event.x,event.y));
+				if (selectedItem != null) {					
+					selectionListener.setSelectedFortifyIssueData(selectedItem);
+					table.setMenu(menu);
+				} else {
+					selectionListener.setSelectedFortifyIssueData(null);
+					table.setMenu(null);					
+				}					
+			}
+		});		
 	}
 
 	private void enrichTable(Table table, Composite parent, TableViewer tableViewer) {
 
 		GridData gridData = new GridData(GridData.FILL_BOTH);
 		gridData.grabExcessVerticalSpace = true;
-		gridData.horizontalSpan = 3;		
+		gridData.horizontalSpan = 3;
 		table.setLayoutData(gridData);
 
 		table.setLinesVisible(true);
@@ -117,7 +195,8 @@ public class FortifyConsoleView extends ViewPart {
 	}
 
 	/**
-	 * Content provider - Content converter from a list of data into Array of data to fill the custom table.
+	 * Content provider - Content converter from a list of data into Array of data
+	 * to fill the custom table.
 	 * 
 	 * @author Umut
 	 *
@@ -173,7 +252,7 @@ public class FortifyConsoleView extends ViewPart {
 				result = fi.getSeverity();
 				break;
 			case 2:
-				result = fi.getLocation();				
+				result = fi.getLocation();
 				break;
 			case 3:
 				result = fi.getReason();
@@ -192,22 +271,24 @@ public class FortifyConsoleView extends ViewPart {
 	}
 
 	/**
-	 * Sorter Utility for each data attribute, triggered when the Column Headers is clicked.
+	 * Sorter Utility for each data attribute, triggered when the Column Headers is
+	 * clicked.
 	 * 
 	 * @author Umut
 	 *
 	 */
 	class SearchResultSortListener extends SelectionAdapter {
-		
-		//I changed the column names to more well known distinguishers for fortify users.
+
+		// I changed the column names to more well known distinguishers for fortify
+		// users.
 		public static final String DESCRIPTION_KEY = "Subcategory";
 		public static final String ID_KEY = "ID";
 		public static final String SEVERITY_KEY = "Criticality";
 		public static final String LOCATION_KEY = "Path";
 		public static final String REASON_KEY = "Category";
 		public static final String TYPE_KEY = "Analyzer";
-		
-		private Map<String, Integer> sortAscendingOrDescending = new HashMap<>();				
+
+		private Map<String, Integer> sortAscendingOrDescending = new HashMap<>();
 
 		private String sortType;
 
@@ -223,11 +304,11 @@ public class FortifyConsoleView extends ViewPart {
 
 		@Override
 		public void widgetSelected(final SelectionEvent e) {
-			
-			List<FortifyIssueDto> issues = data.getIssues();			
+
+			List<FortifyIssueDto> issues = data.getIssues();
 			switch (sortType) {
 			case DESCRIPTION_KEY:
-				if(sortAscendingOrDescending.get(DESCRIPTION_KEY) == 0) {
+				if (sortAscendingOrDescending.get(DESCRIPTION_KEY) == 0) {
 					issues.sort(Comparator.comparing(FortifyIssueDto::getDescription));
 					sortAscendingOrDescending.put(DESCRIPTION_KEY, 1);
 				} else { // ==1
@@ -236,52 +317,52 @@ public class FortifyConsoleView extends ViewPart {
 				}
 				break;
 			case ID_KEY:
-				if(sortAscendingOrDescending.get(ID_KEY) == 0) {
+				if (sortAscendingOrDescending.get(ID_KEY) == 0) {
 					issues.sort(Comparator.comparing(FortifyIssueDto::getId));
 					sortAscendingOrDescending.put(ID_KEY, 1);
 				} else { // ==1
 					issues.sort(Comparator.comparing(FortifyIssueDto::getId, Comparator.reverseOrder()));
 					sortAscendingOrDescending.put(ID_KEY, 0);
-				}				
+				}
 				break;
 			case SEVERITY_KEY:
-				if(sortAscendingOrDescending.get(SEVERITY_KEY) == 0) {
+				if (sortAscendingOrDescending.get(SEVERITY_KEY) == 0) {
 					issues.sort(Comparator.comparing(FortifyIssueDto::getSeverity));
 					sortAscendingOrDescending.put(SEVERITY_KEY, 1);
 				} else { // ==1
 					issues.sort(Comparator.comparing(FortifyIssueDto::getSeverity, Comparator.reverseOrder()));
 					sortAscendingOrDescending.put(SEVERITY_KEY, 0);
-				}				
+				}
 				break;
 			case LOCATION_KEY:
-				if(sortAscendingOrDescending.get(LOCATION_KEY) == 0) {
+				if (sortAscendingOrDescending.get(LOCATION_KEY) == 0) {
 					issues.sort(Comparator.comparing(FortifyIssueDto::getLocation));
 					sortAscendingOrDescending.put(LOCATION_KEY, 1);
 				} else { // ==1
 					issues.sort(Comparator.comparing(FortifyIssueDto::getLocation, Comparator.reverseOrder()));
 					sortAscendingOrDescending.put(LOCATION_KEY, 0);
-				}				
+				}
 				break;
 			case REASON_KEY:
-				if(sortAscendingOrDescending.get(REASON_KEY) == 0) {
+				if (sortAscendingOrDescending.get(REASON_KEY) == 0) {
 					issues.sort(Comparator.comparing(FortifyIssueDto::getReason));
 					sortAscendingOrDescending.put(REASON_KEY, 1);
 				} else { // ==1
 					issues.sort(Comparator.comparing(FortifyIssueDto::getReason, Comparator.reverseOrder()));
 					sortAscendingOrDescending.put(REASON_KEY, 0);
-				}				
+				}
 				break;
 			case TYPE_KEY:
-				if(sortAscendingOrDescending.get(TYPE_KEY) == 0) {
+				if (sortAscendingOrDescending.get(TYPE_KEY) == 0) {
 					issues.sort(Comparator.comparing(FortifyIssueDto::getType));
 					sortAscendingOrDescending.put(TYPE_KEY, 1);
 				} else { // ==1
 					issues.sort(Comparator.comparing(FortifyIssueDto::getType, Comparator.reverseOrder()));
 					sortAscendingOrDescending.put(TYPE_KEY, 0);
-				}				
+				}
 				break;
 			}
 			viewer.setInput(data);
-		}		
+		}
 	}
 }
