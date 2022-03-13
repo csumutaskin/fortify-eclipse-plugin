@@ -33,14 +33,33 @@ public class DBUtils {
 	public static String DB_FILE_NAME = "IgnoredRulesList.db";
 	private static final Logger LOGGER = Logger.getLogger(DBUtils.class.getName());
 
+	/**
+	 * Filters o.s. user wide ignore rules from a given collection 
+	 * @param beforeElimination unfiltered collection.
+	 * @return filtered collection.
+	 */
 	public static List<FortifyIssueDto> eliminateIgnoredRulesAtUserScope(List<FortifyIssueDto> beforeElimination) {
 		return eliminateIgnoredRulesFromGivenList(USER_DB_FOLDER_PATH, DB_FILE_NAME, beforeElimination);
 	}
 
+	/**
+	 * Filters workspace wide ignore rules from a given collection 
+	 * @param beforeElimination unfiltered collection.
+	 * @return filtered collection.
+	 */
 	public static List<FortifyIssueDto> eliminateIgnoredRulesAtWorkspaceScope(List<FortifyIssueDto> beforeElimination) {
 		return eliminateIgnoredRulesFromGivenList(WORKSPACE_DB_FOLDER_PATH, DB_FILE_NAME, beforeElimination);
 	}
 		
+	/**
+	 * Returns a Collection of objects by eliminating end user wished rules (these rules are put to ignore list .db files)
+	 * .db files are scanned and intersected rules by the collection to be filtered (this collection will be shown in custom views) are erased from the whole collection\
+	 * and "not ignored" rules are returned after this filter.
+	 * @param dbFolderPath folder path that .db file is located.
+	 * @param dbFilePath file path that .db is located.
+	 * @param givenListBeforeElimination unfiltered collection (will be filtered when this method runs.)
+	 * @return filtered list.
+	 */
 	public static List<FortifyIssueDto> eliminateIgnoredRulesFromGivenList(String dbFolderPath, String dbFilePath, List<FortifyIssueDto> givenListBeforeElimination) {
 		
 		List<FortifyIssueDto> removeList = new ArrayList<>();
@@ -111,6 +130,7 @@ public class DBUtils {
 	}
 
 	/**
+	 * Rollback method of what is previously put to the ignored list db file.
 	 * Removes data in formation of index0:Category and index1: Subcategory from OS DB File. (detects and removes line)
 	 * @param listToRemove list to remove from text file (.db file)
 	 */
@@ -119,6 +139,7 @@ public class DBUtils {
 	}
 	
 	/**
+	 * Rollback method of what is previously put to the ignored list db file.
 	 * Removes data in formation of index0:Category and index1: Subcategory from Workspace DB File. (detects and removes line)
 	 * @param listToRemove list to remove from text file (.db file)
 	 */
