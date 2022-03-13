@@ -17,6 +17,11 @@
             name="Scan to PDF"
             id="FortifyScanner.commands.tofileCommand">
       </command>
+      <command
+            categoryId="FortifyScanner.commands.category"
+            name="Ignored Rules"
+            id="FortifyScanner.commands.toIgnoredRules">
+      </command>
    </extension>
    <!-- Java Class Handlers 1- OnTheFlyHandler 2- FileReportHandler -->
    <extension
@@ -29,6 +34,10 @@
             class="fortifyscanner.handlers.FileReportHandler"
             commandId="FortifyScanner.commands.tofileCommand">
       </handler>
+      <handler
+            class="fortifyscanner.handlers.IgnoredRulesHandler"
+            commandId="FortifyScanner.commands.toIgnoredRules">
+      </handler>
    </extension>
    <!-- Keyboard Bindings 1- Ctrl+6 for ontheflyCommand -->
    <extension
@@ -37,8 +46,20 @@
             commandId="FortifyScanner.commands.ontheflyCommand"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             contextId="org.eclipse.ui.contexts.window"
-            sequence="M1+6">
+            sequence="M1+4">
       </key>
+      <key
+            commandId="FortifyScanner.commands.tofileCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+5">
+      </key>
+      <key
+            commandId="FortifyScanner.commands.toIgnoredRules"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+6">
+      </key>      
    </extension>
    <!-- GUI (Custom Added Buttons-Entry Points) 1- MainMenu 2- ToolbarButton -->
    <extension
@@ -58,6 +79,11 @@
                   commandId="FortifyScanner.commands.tofileCommand"
                   id="FortifyScanner.menus.tofileCommand"
                   mnemonic="P">
+            </command>
+			<command
+                  commandId="FortifyScanner.commands.toIgnoredRules"
+                  id="FortifyScanner.menus.toIgnoredRules"
+                  mnemonic="I">
             </command>
          </menu>
       </menuContribution>
