@@ -43,8 +43,8 @@ public class FortifyConsoleView extends ViewPart {
 
 	public static final String RIGHT_CLICK_MENU_ITEM_1_STR = "Ignore Line just once";
 	public static final String RIGHT_CLICK_MENU_ITEM_2_STR = "Ignore Category just once";
-	public static final String RIGHT_CLICK_MENU_ITEM_3_STR = "Ignore Category in this Workspace";
-	public static final String RIGHT_CLICK_MENU_ITEM_4_STR = "Ignore Category for current O.S. User";
+	public static final String RIGHT_CLICK_MENU_ITEM_3_STR = "Ignore Category for this Workspace Projects only";
+	public static final String RIGHT_CLICK_MENU_ITEM_4_STR = "Ignore Category for every Java Project in this computer";
 	
 	private TableViewer viewer;
 	private Table table;
