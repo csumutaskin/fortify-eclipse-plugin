@@ -1,10 +1,14 @@
 package fortifyscanner.ui.dialog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
@@ -36,12 +40,16 @@ import fortifyscanner.util.DBUtils;
  */
 public class IgnoredRulesDialog extends TitleAreaDialog {
 
+	public static final String OS_KEY = "O.S";
+	public static final String WORKSPACE_KEY = "Workspace only";
+	
 	private String windowTitle;
 	private IgnoredRulesDialog thisDialog;
 	private Table table;
 	//End user's all selected (very first column in this title area dialog) box indexes (row number, starting from 0) are collected here, unselected ones are removed.
 	private List<Integer> endUserSelectedIndexesOnIgnoreList = new ArrayList<Integer>();
-
+	private List<String[]> tableData = new ArrayList<>();
+	
 	public IgnoredRulesDialog(Shell parentShell, String windowTitle) {
 
 		super(parentShell);
@@ -110,14 +118,16 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 		column.setWidth(150);
 
 		List<String[]> osWideIgnoredRules = DBUtils.getColonSeperatedCatAndSubCatFromAllWorkspacesDB();
-		List<String[]> enhancedOsWideIgnoredRules = osWideIgnoredRules.stream().map(array -> new String[] {array[0], array[1], "O.S."}).collect(Collectors.toList());
+		List<String[]> enhancedOsWideIgnoredRules = osWideIgnoredRules.stream().map(array -> new String[] {array[0], array[1], OS_KEY}).collect(Collectors.toList());
 				
 				
 		List<String[]> workspaceWideIgnoredRules = DBUtils.getColonSeperatedCatAndSubCatFromCurrentWorkspaceDB();
-		List<String[]> enhancedWorkspaceWideIgnoredRules = workspaceWideIgnoredRules.stream().map(array -> new String[] {array[0], array[1], "Workspace only"}).collect(Collectors.toList());
+		List<String[]> enhancedWorkspaceWideIgnoredRules = workspaceWideIgnoredRules.stream().map(array -> new String[] {array[0], array[1], WORKSPACE_KEY}).collect(Collectors.toList());
 		
-		enhancedOsWideIgnoredRules.addAll(enhancedWorkspaceWideIgnoredRules);		
-		fillData(table, enhancedOsWideIgnoredRules);	
+		enhancedOsWideIgnoredRules.addAll(enhancedWorkspaceWideIgnoredRules);
+		tableData = enhancedOsWideIgnoredRules;
+		
+		fillData(table, tableData);	
 		return area;
 	}
 	
@@ -163,29 +173,44 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 		}		
 	}
 	
-	private void activateBackEndUserSelectedRules() {		
-		TableItem[] items = table.getItems();
+	private void activateBackEndUserSelectedRules() {	
+		
+		Map<String, List<String[]>> rulesToRollbackMap = new HashMap<>();
+		rulesToRollbackMap.put(OS_KEY, new ArrayList<>());
+		rulesToRollbackMap.put(WORKSPACE_KEY, new ArrayList<>());
+		
 		for(int index : endUserSelectedIndexesOnIgnoreList) {
-			String[] toBeRolledBackIgnoredRuleData = (String[])items[index].getData();
-			System.out.println(toBeRolledBackIgnoredRuleData);
-			System.out.println(toBeRolledBackIgnoredRuleData[2]);
-			System.out.println(toBeRolledBackIgnoredRuleData[0]);
+			String[] threeColumnedData = tableData.get(index);
+			List<String[]> tempList = rulesToRollbackMap.get(threeColumnedData[2]);
+			tempList.add(new String[]{threeColumnedData[0], threeColumnedData[1]});			
+			rulesToRollbackMap.put(threeColumnedData[2], tempList);
 		}
+		
+		DBUtils.cleanOSDBData(rulesToRollbackMap.get(OS_KEY));
+		DBUtils.cleanWorkspaceDBData(rulesToRollbackMap.get(WORKSPACE_KEY));		
+		MessageDialog.openInformation(thisDialog.getShell(), "System Response", "Your selected rule list is activated back and removed from ignored rule list. Please do a re-scan on the same project to include the activated back rules.");
 	}
+	
+	@Override
+    public void okPressed() {
+    	activateBackEndUserSelectedRules();
+        this.close();
+    }
 
 	@Override
 	protected Control createButtonBar(Composite parent) {
+
 		Composite blank = new Composite(parent, SWT.NONE);
 		blank.setLayoutData(new GridData(1, 1));
 		Composite buttonbar = new Composite(parent, SWT.None);
 		buttonbar.setLayout(new GridLayout(3, false));
 		buttonbar.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false));
-		Button removeSelectedFromIgnoreListButton = super.createButton(buttonbar, 1, "Activate Back Rules", false);
-		removeSelectedFromIgnoreListButton.addListener(SWT.Selection, new Listener() {
-		      public void handleEvent(Event e) {
-		    	  activateBackEndUserSelectedRules();
-		        }
-		      });
+		Button removeSelectedFromIgnoreListButton = super.createButton(buttonbar, IDialogConstants.OK_ID, "Activate Back Rules", false);
+//		removeSelectedFromIgnoreListButton.addListener(SWT.Selection, new Listener() {
+//		      public void handleEvent(Event e) {
+//		    	  activateBackEndUserSelectedRules();		    	 
+//		        }
+//		      });
 		
 		Button cancelButton = super.createButton(buttonbar, 2, "Cancel", true);
 		cancelButton.addListener(SWT.Selection, new Listener() {
@@ -195,6 +220,29 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 		      });
 		return buttonBar;
 	}
+	
+//	@Override
+//	protected Control createButtonBar(Composite parent) {
+//		Composite blank = new Composite(parent, SWT.NONE);
+//		blank.setLayoutData(new GridData(1, 1));
+//		Composite buttonbar = new Composite(parent, SWT.None);
+//		buttonbar.setLayout(new GridLayout(3, false));
+//		buttonbar.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false));
+//		Button removeSelectedFromIgnoreListButton = super.createButton(buttonbar, 1, "Activate Back Rules", false);
+//		removeSelectedFromIgnoreListButton.addListener(SWT.Selection, new Listener() {
+//		      public void handleEvent(Event e) {
+//		    	  activateBackEndUserSelectedRules();		    	 
+//		        }
+//		      });
+//		
+//		Button cancelButton = super.createButton(buttonbar, 2, "Cancel", true);
+//		cancelButton.addListener(SWT.Selection, new Listener() {
+//		      public void handleEvent(Event e) {
+//		    	  thisDialog.close();
+//		        }
+//		      });
+//		return buttonBar;
+//	}
 	
 	/**
 	 * Selection listener class for select boxes in dialog's ignore list table (very first column).

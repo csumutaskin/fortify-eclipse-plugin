@@ -1,10 +1,13 @@
 package fortifyscanner.util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -105,5 +108,71 @@ public class DBUtils {
 			LOGGER.log(Level.SEVERE, "Can not read tuples from db located at: " + dbFolder + "/" + dbFile, ioe);
 		}
 		return toReturn;
+	}
+
+	/**
+	 * Removes data in formation of index0:Category and index1: Subcategory from OS DB File. (detects and removes line)
+	 * @param listToRemove list to remove from text file (.db file)
+	 */
+	public static boolean cleanOSDBData(List<String[]> listToRemove) {
+		return cleanGivenDBData(USER_DB_FOLDER_PATH, DB_FILE_NAME, listToRemove);
+	}
+	
+	/**
+	 * Removes data in formation of index0:Category and index1: Subcategory from Workspace DB File. (detects and removes line)
+	 * @param listToRemove list to remove from text file (.db file)
+	 */
+	public static boolean cleanWorkspaceDBData(List<String[]> listToRemove) {
+		return cleanGivenDBData(WORKSPACE_DB_FOLDER_PATH, DB_FILE_NAME, listToRemove);				
+	}	
+		
+	private static boolean cleanGivenDBData(String dbFolderPath, String dbFilePath, List<String[]> listToRemove) {	
+
+		if(listToRemove == null) {
+			return true;
+		}
+
+		File tempDbFile = new File(dbFolderPath + "/temp-" + dbFilePath);
+		File dbFile = new File(dbFolderPath + "/" + dbFilePath);
+		
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(tempDbFile));
+			BufferedReader reader = new BufferedReader(new FileReader(dbFile))) {
+		
+			String currentLine;		
+			Map<String, Boolean> writeToNewDB = new HashMap<>();
+			
+			while((currentLine = reader.readLine()) != null) {
+			
+				writeToNewDB.put(currentLine, Boolean.TRUE);
+				
+				String[] tupleInDB = currentLine.trim().split(":");
+				for(String[] lineDataToRemove : listToRemove) {
+				
+					if(tupleInDB.length == 2 &&
+					   tupleInDB[0].trim().equals(lineDataToRemove[0]) &&
+					   tupleInDB[1].trim().equals(lineDataToRemove[1])) {
+					
+						writeToNewDB.put(currentLine, Boolean.FALSE);
+						
+					} else if(tupleInDB.length == 1 &&
+							tupleInDB[0].trim().equals(lineDataToRemove[0].trim()) &&
+							"".equals(lineDataToRemove[1].trim())) {
+						
+						writeToNewDB.put(currentLine, Boolean.FALSE);			
+					}
+				}
+				if(writeToNewDB.get(currentLine) == Boolean.TRUE && !"".equals(currentLine.trim())) {
+					writer.write(currentLine + System.getProperty("line.separator"));
+					writer.flush();
+				}
+			}
+		} catch(IOException ioe) {
+			LOGGER.log(Level.SEVERE, "Can not remove back rules from db located at: " + dbFolderPath + "/" + dbFilePath, ioe);
+			return false;
+		}		
+		if(dbFile.exists()) {
+			dbFile.delete();
+		}
+		return tempDbFile.renameTo(dbFile);
 	}
 }
