@@ -205,13 +205,7 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 		Composite buttonbar = new Composite(parent, SWT.None);
 		buttonbar.setLayout(new GridLayout(3, false));
 		buttonbar.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false));
-		Button removeSelectedFromIgnoreListButton = super.createButton(buttonbar, IDialogConstants.OK_ID, "Activate Back Rules", false);
-//		removeSelectedFromIgnoreListButton.addListener(SWT.Selection, new Listener() {
-//		      public void handleEvent(Event e) {
-//		    	  activateBackEndUserSelectedRules();		    	 
-//		        }
-//		      });
-		
+		super.createButton(buttonbar, IDialogConstants.OK_ID, "Activate Back Rules", false);
 		Button cancelButton = super.createButton(buttonbar, 2, "Cancel", true);
 		cancelButton.addListener(SWT.Selection, new Listener() {
 		      public void handleEvent(Event e) {
@@ -220,29 +214,6 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 		      });
 		return buttonBar;
 	}
-	
-//	@Override
-//	protected Control createButtonBar(Composite parent) {
-//		Composite blank = new Composite(parent, SWT.NONE);
-//		blank.setLayoutData(new GridData(1, 1));
-//		Composite buttonbar = new Composite(parent, SWT.None);
-//		buttonbar.setLayout(new GridLayout(3, false));
-//		buttonbar.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false));
-//		Button removeSelectedFromIgnoreListButton = super.createButton(buttonbar, 1, "Activate Back Rules", false);
-//		removeSelectedFromIgnoreListButton.addListener(SWT.Selection, new Listener() {
-//		      public void handleEvent(Event e) {
-//		    	  activateBackEndUserSelectedRules();		    	 
-//		        }
-//		      });
-//		
-//		Button cancelButton = super.createButton(buttonbar, 2, "Cancel", true);
-//		cancelButton.addListener(SWT.Selection, new Listener() {
-//		      public void handleEvent(Event e) {
-//		    	  thisDialog.close();
-//		        }
-//		      });
-//		return buttonBar;
-//	}
 	
 	/**
 	 * Selection listener class for select boxes in dialog's ignore list table (very first column).

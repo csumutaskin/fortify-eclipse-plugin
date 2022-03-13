@@ -126,6 +126,7 @@ public class DBUtils {
 		return cleanGivenDBData(WORKSPACE_DB_FOLDER_PATH, DB_FILE_NAME, listToRemove);				
 	}	
 		
+	//Refreshes the txt db by rolling back the lines (erases the lines) that are checked as "activate back" by the end user.
 	private static boolean cleanGivenDBData(String dbFolderPath, String dbFilePath, List<String[]> listToRemove) {	
 
 		if(listToRemove == null) {
