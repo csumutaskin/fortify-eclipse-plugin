@@ -61,6 +61,28 @@ public class DBUtils {
 		return givenListBeforeElimination;
 	}
 	
+	/**
+	 * Returns List of 2 length ignored rules string arrays (Category,sub category elements) from OS User Wide DB.
+	 * @return List of ignored rules.
+	 */
+	public static List<String[]> getColonSeperatedCatAndSubCatFromAllWorkspacesDB() {
+		return getColonSeperatedCatAndSubCatFromDB(USER_DB_FOLDER_PATH, DB_FILE_NAME);
+	}
+	
+	/**
+	 * Returns List of 2 length ignored rules string arrays (Category,sub category elements) from Workspace Wide DB.
+	 * @return List of ignored rules.
+	 */
+	public static List<String[]> getColonSeperatedCatAndSubCatFromCurrentWorkspaceDB() {
+		return getColonSeperatedCatAndSubCatFromDB(WORKSPACE_DB_FOLDER_PATH, DB_FILE_NAME);
+	}
+	
+	/**
+	 * Returns List of 2 length ignored rules string arrays (Category,sub category elements) from DB given in argument list.
+	 * @param dbFolder containing folder path of the .db file for this plugin 
+	 * @param dbFile .db file name
+	 * @return List of ignored rules.
+	 */
 	public static List<String[]> getColonSeperatedCatAndSubCatFromDB(String dbFolder, String dbFile) {
 
 		List<String[]> toReturn = new ArrayList<>();
