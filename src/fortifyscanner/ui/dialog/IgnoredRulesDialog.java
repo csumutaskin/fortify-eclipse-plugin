@@ -1,5 +1,6 @@
 package fortifyscanner.ui.dialog;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -7,6 +8,8 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -35,6 +38,9 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 
 	private String windowTitle;
 	private IgnoredRulesDialog thisDialog;
+	private Table table;
+	//End user's all selected (very first column in this title area dialog) box indexes (row number, starting from 0) are collected here, unselected ones are removed.
+	private List<Integer> endUserSelectedIndexesOnIgnoreList = new ArrayList<Integer>();
 
 	public IgnoredRulesDialog(Shell parentShell, String windowTitle) {
 
@@ -72,7 +78,7 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 		Label label = new Label(container, 0);
 		label.setText("Please manually trigger SCA for your project again to see the refreshed issue list.");
 
-		Table table = new Table(container, SWT.SINGLE | SWT.BORDER | SWT.NO_SCROLL | SWT.V_SCROLL);
+		table = new Table(container, SWT.SINGLE | SWT.BORDER | SWT.NO_SCROLL | SWT.V_SCROLL);
 		GridData gridData = new GridData(GridData.FILL_BOTH);
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalSpan = 3;
@@ -132,6 +138,7 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 			
 			Button button = new Button(table, SWT.CHECK);
 			button.pack();
+			button.addSelectionListener(new IgnoreListSelectionListener(i));
 			tableEditor.minimumWidth = button.getSize().x;
 			tableEditor.horizontalAlignment = SWT.LEFT;
 			tableEditor.setEditor(button, items[i], 0);
@@ -156,8 +163,14 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 		}		
 	}
 	
-	private void activateBackEndUserSelectedRules() {
-		
+	private void activateBackEndUserSelectedRules() {		
+		TableItem[] items = table.getItems();
+		for(int index : endUserSelectedIndexesOnIgnoreList) {
+			String[] toBeRolledBackIgnoredRuleData = (String[])items[index].getData();
+			System.out.println(toBeRolledBackIgnoredRuleData);
+			System.out.println(toBeRolledBackIgnoredRuleData[2]);
+			System.out.println(toBeRolledBackIgnoredRuleData[0]);
+		}
 	}
 
 	@Override
@@ -181,5 +194,30 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 		        }
 		      });
 		return buttonBar;
+	}
+	
+	/**
+	 * Selection listener class for select boxes in dialog's ignore list table (very first column).
+	 * 
+	 * @author Umut
+	 *
+	 */
+	class IgnoreListSelectionListener extends SelectionAdapter {
+
+		private Integer index;
+		
+		public IgnoreListSelectionListener(Integer index) {
+			this.index = index;
+		}
+		
+		@Override
+		public void widgetSelected(SelectionEvent selectionEvent) {
+			boolean selected = ( (Button) selectionEvent.getSource() ).getSelection();
+			if(selected) {
+				endUserSelectedIndexesOnIgnoreList.add(Integer.valueOf(index));
+			} else { //unselected
+				endUserSelectedIndexesOnIgnoreList.remove(Integer.valueOf(index));
+			}			
+		}
 	}
 }
