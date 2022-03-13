@@ -1,6 +1,7 @@
 package fortifyscanner.ui.dialog;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -103,27 +104,31 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 		column.setWidth(150);
 
 		List<String[]> osWideIgnoredRules = DBUtils.getColonSeperatedCatAndSubCatFromAllWorkspacesDB();
+		List<String[]> enhancedOsWideIgnoredRules = osWideIgnoredRules.stream().map(array -> new String[] {array[0], array[1], "O.S."}).collect(Collectors.toList());
+				
+				
 		List<String[]> workspaceWideIgnoredRules = DBUtils.getColonSeperatedCatAndSubCatFromCurrentWorkspaceDB();
+		List<String[]> enhancedWorkspaceWideIgnoredRules = workspaceWideIgnoredRules.stream().map(array -> new String[] {array[0], array[1], "Workspace only"}).collect(Collectors.toList());
 		
-		osWideIgnoredRules.addAll(workspaceWideIgnoredRules);
-		
-		fillData(table, osWideIgnoredRules);	
+		enhancedOsWideIgnoredRules.addAll(enhancedWorkspaceWideIgnoredRules);		
+		fillData(table, enhancedOsWideIgnoredRules);	
 		return area;
 	}
 	
-	private void fillData(Table table, List<String[]> ignoredRules) {
+	private void fillData(Table table, List<String[]> ignoredRulesWithLastColumnDBOriginInfo) {
 		
-		if(ignoredRules == null) {
+		if(ignoredRulesWithLastColumnDBOriginInfo == null) {
 			return;
 		}
 		
-		for (int i = 0; i < ignoredRules.size(); i++) {
+		for (int i = 0; i < ignoredRulesWithLastColumnDBOriginInfo.size(); i++) {
 			new TableItem(table, SWT.NONE);
 		}
-		
+			
 		TableItem[] items = table.getItems();
+	
 		for (int i = 0; i < items.length; i++) {
-			TableEditor tableEditor = new TableEditor(table);
+	        TableEditor tableEditor = new TableEditor(table);
 			
 			Button button = new Button(table, SWT.CHECK);
 			button.pack();
@@ -133,46 +138,27 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 			
 			tableEditor = new TableEditor(table);
 			Text textCategory = new Text(table, SWT.NONE);
-			textCategory.setText(ignoredRules.get(i)[0]);
+			textCategory.setText(ignoredRulesWithLastColumnDBOriginInfo.get(i)[0]);
 			tableEditor.grabHorizontal = true;
 			tableEditor.setEditor(textCategory, items[i], 1);
 			
 			tableEditor = new TableEditor(table);
 			Text textSubCategory = new Text(table, SWT.NONE);
-			textSubCategory.setText(ignoredRules.get(i)[1]);
+			textSubCategory.setText(ignoredRulesWithLastColumnDBOriginInfo.get(i)[1]);
 			tableEditor.grabHorizontal = true;
 			tableEditor.setEditor(textSubCategory, items[i], 2);			
+			
+			tableEditor = new TableEditor(table);
+			Text textScope = new Text(table, SWT.NONE);
+			textScope.setText(ignoredRulesWithLastColumnDBOriginInfo.get(i)[2]);
+			tableEditor.grabHorizontal = true;
+			tableEditor.setEditor(textScope, items[i], 3);			
 		}		
 	}
 	
-//	private void fillData(List<String[]> ignoredRules) {
-//		for (int i = 0; i < 12; i++) {
-//			new TableItem(table, SWT.NONE);
-//		}
-//		TableItem[] items = table.getItems();
-//		for (int i = 0; i < items.length; i++) {
-//			TableEditor tableEditor = new TableEditor(table);
-//			CCombo combo = new CCombo(table, SWT.NONE);
-//			combo.setText("CCombo");
-//			combo.add("combo item 1");
-//			combo.add("combo item 2");
-//			tableEditor.grabHorizontal = true;
-//			tableEditor.setEditor(combo, items[i], 0);
-//			tableEditor = new TableEditor(table);
-//			
-//			Text text = new Text(table, SWT.NONE);
-//			text.setText("Text");
-//			tableEditor.grabHorizontal = true;
-//			tableEditor.setEditor(text, items[i], 1);
-//			tableEditor = new TableEditor(table);
-//			
-//			Button button = new Button(table, SWT.CHECK);
-//			button.pack();
-//			tableEditor.minimumWidth = button.getSize().x;
-//			tableEditor.horizontalAlignment = SWT.LEFT;
-//			tableEditor.setEditor(button, items[i], 2);
-//		}
-//}
+	private void activateBackEndUserSelectedRules() {
+		
+	}
 
 	@Override
 	protected Control createButtonBar(Composite parent) {
@@ -181,7 +167,13 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 		Composite buttonbar = new Composite(parent, SWT.None);
 		buttonbar.setLayout(new GridLayout(3, false));
 		buttonbar.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false));
-		super.createButton(buttonbar, 1, "Activate Back Rules", false);
+		Button removeSelectedFromIgnoreListButton = super.createButton(buttonbar, 1, "Activate Back Rules", false);
+		removeSelectedFromIgnoreListButton.addListener(SWT.Selection, new Listener() {
+		      public void handleEvent(Event e) {
+		    	  activateBackEndUserSelectedRules();
+		        }
+		      });
+		
 		Button cancelButton = super.createButton(buttonbar, 2, "Cancel", true);
 		cancelButton.addListener(SWT.Selection, new Listener() {
 		      public void handleEvent(Event e) {
@@ -189,15 +181,5 @@ public class IgnoredRulesDialog extends TitleAreaDialog {
 		        }
 		      });
 		return buttonBar;
-	}
-
-	/**
-	 * Triggers when confirm button is pressed in current dialog.
-	 */
-	@Override
-	protected void okPressed() {
-
-		// ok pressed flow..
-		super.okPressed();
 	}
 }
