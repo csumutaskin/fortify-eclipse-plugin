@@ -44,15 +44,15 @@ public class DBUtils {
 		if(givenListBeforeElimination == null) {
 			return null;
 		}
-		List<String[]> userScopedIgnoredList = getColonSeperatedCatAndSubCatFromDB(dbFolderPath, dbFilePath);
+		List<String[]> userScopedIgnoredList = getColonSeperatedCatAndSubCatFromDB(dbFolderPath, dbFilePath);	
 		Map<String, String> catSubCatMap = userScopedIgnoredList.stream().collect(Collectors.toMap((array) -> array[0], (array) -> array[1]));
 		
 		for(FortifyIssueDto current : givenListBeforeElimination) {
-			String ignoredSubCategory = catSubCatMap.get(current.getReason());
+			String ignoredSubCategory = catSubCatMap.get(current.getReason().trim());
 			if(ignoredSubCategory != null) {
 				if("".equals(ignoredSubCategory) && current.getDescription() == null) {//1st match to remove current rule among all.
 					removeList.add(current);	
-				} else if(ignoredSubCategory.equals(current.getDescription())) {//2nd match to remove current rule among all.
+				} else if(current.getDescription() != null && ignoredSubCategory.equals(current.getDescription().trim())) {//2nd match to remove current rule among all.
 					removeList.add(current);
 				}				
 			}			
@@ -69,12 +69,14 @@ public class DBUtils {
 			BufferedReader br = new BufferedReader(fr);) {
 			String line = "";
 			while ((line = br.readLine()) != null) {
-				String[] catSubCat = line.split(":");
-				if (catSubCat.length >= 1) {
-					if (catSubCat.length == 1) {
-						catSubCat = new String[] { catSubCat[0], "" };
+				if(!"".equals(line.trim())) {
+					String[] catSubCat = line.split(":");
+					if (catSubCat.length >= 1) {
+						if (catSubCat.length == 1) {
+							catSubCat = new String[] { catSubCat[0], "" };
+						}
+						toReturn.add(catSubCat);
 					}
-					toReturn.add(catSubCat);
 				}
 			}
 		} catch (IOException ioe) {
