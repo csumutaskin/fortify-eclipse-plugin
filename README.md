@@ -7,3 +7,10 @@ Fortify SCA is a tool that helps developers by making static security code analy
 What I provided here is a custom Eclipe I.D.E plugin that facilitated "my way of implementation". This plugin itself is useless without **"a locally installed and licenced Fortify SCA on Windows O.S."** product. I -kind of- tried to convert the issues detected by the Fortify tool into a very simple check list, like we do when we go to shopping, nothing more. While implementing the solution, as I stated earlier, I tried to practice my rusty knowhow on SWT components and plugin development.
 
 I repeat myself again: "You have to have a physical access to a computer on which Fortify SCA software is locally installed and licenced. Otherwise, this plugin is nothing more but garbage.
+
+# Prerequeisites:
+ A Windows (10 or older but still useful) Operating System with Fortify SCA is installed (and a Windows O.S. User that is authorized to create folders and files).
+ Eclipse IDE (Plugin is an Eclipse Plugin)
+ 
+ 
+ 
