@@ -23,8 +23,8 @@ Copy the .jar file in target folder (I excluded target folder and .jar files fro
 
 This plugin is used to scan a java project base (not individual files in a project) in Eclipse. There are 2 types of scans. 
 
-1- On the fly scan -> uses sourceanalyzer command in the background. Issues detected are written to the custom views in the plugin with brief content (sourceanalyzer is mostly used to log issues summary in devops pipelines, the same utility is used for on the fly scan).
-2- Scan to PDF -> More detailed scan, scan is made and issues along with abstract and reccomendation tips to fix these issues are written to a .pdf file on developer's desktop. (.fpr file is also written to the desktop). But make sure that Fortify SCA/bin is put among Windows PATH variables because ReportGenerator utility is used to create the pdf report.
+* On the fly scan -> uses sourceanalyzer command in the background. Issues detected are written to the custom views in the plugin with brief content (sourceanalyzer is mostly used to log issues summary in devops pipelines, the same utility is used for on the fly scan).
+* Scan to PDF -> More detailed scan, scan is made and issues along with abstract and reccomendation tips to fix these issues are written to a .pdf file on developer's desktop. (.fpr file is also written to the desktop). But make sure that Fortify SCA/bin is put among Windows PATH variables because ReportGenerator utility is used to create the pdf report.
 
 A scan can be triggered in 2 ways:
 
