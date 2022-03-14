@@ -105,8 +105,10 @@ The explanation of each item on this right click menu is as follows:
 
 The issues that are put to ignore list (workspace wide and user wide) can be seen using the Top Menu Bar: Fortify Link -> Ignored Rules (or by hitting the Ctrl+6 hotkey) and using the same dialog these rules are reverted back to active position: Here are 2 pictures that show how the ignore list can be seen and rules can be reverted back to active position.
 
+![How to Open Ignored Rules List](https://user-images.githubusercontent.com/16647815/158265006-e4602438-71d3-4a7a-88c3-63642ef56c67.png)
 
+![Ignore List](https://user-images.githubusercontent.com/16647815/158265444-6972751f-7428-4cff-b0d9-894612ed485a.png)
 
-
- 
+(When a scan is made while some rules are in persistent ignore list store, they are never outputted
+to the end user if rescans are made.) 
  
