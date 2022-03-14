@@ -54,6 +54,10 @@ public class FortifyIssueDto {
 		this.reason = reason;
 	}
 	public String getDescription() {
+		//Needed this not to override a comparator over a standard string comparator. null values are giving exception otherwise.
+		if(description == null) {
+			return "";
+		}
 		return description;
 	}
 	public void setDescription(String description) {

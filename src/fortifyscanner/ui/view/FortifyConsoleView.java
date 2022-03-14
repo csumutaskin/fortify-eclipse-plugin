@@ -296,8 +296,7 @@ public class FortifyConsoleView extends ViewPart {
 	 */
 	class SearchResultSortListener extends SelectionAdapter {
 
-		// I changed the column names to more well known distinguishers for fortify
-		// users.
+		// I changed the column label names to more known expressions by fortify users.
 		public static final String DESCRIPTION_KEY = "Subcategory";
 		public static final String ID_KEY = "ID";
 		public static final String SEVERITY_KEY = "Criticality";
