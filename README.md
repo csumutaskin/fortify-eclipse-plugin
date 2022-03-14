@@ -98,11 +98,15 @@ There are 4 ways to ignore an issue. All of them are triggered when you right cl
 
 The explanation of each item on this right click menu is as follows:
 
-* Ignore Line Just Once:
-* Ignore Category Just Once:
-* Ignore Category for this Workspace Projects only:
-* Ignore Category for every Java Project in this computer:
-*
+* Ignore Line Just Once: The line (with that unique ID) is deleted immediately but not added to a permanent file store. So, if a re-scan is made for the project, the issue appears again on the fly table as a row. If a developer wants to focus on only for some issues but not the others, he/she can use this flow for temporary.
+* Ignore Category Just Once: Similar as above, but this time instead of ignoring and hiding only the chosen line, all the lines that match the clicked line's category and subcategory will be hided. e.g. If the clicked line contains Reason: System Information Leak and Subcategory: Internal, all lines that contain this category are hided immediately. But if a rescan is done on the same project these issues reappear again.
+* Ignore Category for this Workspace Projects only: There are 2 permanent stores for this plugin. One is workspace wide, the other is O.S user wide. If the user chooses this flow, the category and subcategory (Reason and Description columns) is added to the Workspace wide db store as a line permanently and any other project scans in the same workspace and rescans on the workspace projects never output the issue to the end user, until it is removed.
+* Ignore Category for every Java Project in this computer: Similar as above, when the category is added to user wide store, no other project scan on this computer (for the O.S user) outputs this issue until it is removed from ignored list. 
+
+The issues that are put to ignore list (workspace wide and user wide) can be seen using the Top Menu Bar: Fortify Link -> Ignored Rules (or by hitting the Ctrl+6 hotkey) and using the same dialog these rules are reverted back to active position: Here are 2 pictures that show how the ignore list can be seen and rules can be reverted back to active position.
+
+
+
 
  
  
