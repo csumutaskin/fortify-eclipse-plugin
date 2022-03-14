@@ -70,6 +70,17 @@ Reason: Category
 Description: SubCategory - or more detail
 Type: Analyzer tip
 
+When an end user double clicks an item (row) from the Fortify on the fly view the following things happen:
+* Fortify Issue Trace prints all the lines that causes the issue (From the very origin line to where this line causes the same side effects)
+* If Fortify Issue Trace contains more than one line as a location trace any of the lines can be double clicked by the developer and the cursor is automatically located at the double clicked location (if the java file is not opened before, it is automatically opened by the plugin).
+* Eclipse editor automatically opens the file and the line number the issue is detected and focuses the line cursor on that line.
+* Third custom view of this plugin called "Fortify Taxonomy" shows the abstract and the recomendation tip to fix the issue.
+
+![Double Click a Row In Issue Table](https://user-images.githubusercontent.com/16647815/158259486-f5c7c829-7927-40fb-8569-52c39f3221c9.png)
+
+Abstract and Recommendation Tips in Fortify Taxonomy is shown as below:
+
+![Fortify Taxonomy](https://user-images.githubusercontent.com/16647815/158259805-5f423b8b-957b-418e-bed5-e125d6804d45.png)
 
 
  
