@@ -28,7 +28,7 @@ This plugin is used to scan a java project base (not individual files in a proje
 
 A scan can be triggered in 2 ways:
 
-* Quick Scan (On the fly Scan)
+## Quick Scan (On the fly Scan)
 
 1- From the top menu bar There is a new 'Fortify' menu item that will open a sub menu in which scans can be triggered (Both on the fly and pdf output scans are triggered here)
 
@@ -84,11 +84,13 @@ Abstract and Recommendation Tips in Fortify Taxonomy is shown as below:
 
 ![Fortify Taxonomy](https://user-images.githubusercontent.com/16647815/158259805-5f423b8b-957b-418e-bed5-e125d6804d45.png)
 
-* Detailed Report with .fpr File Scan
+## Detailed Report Scan (with .fpr and .pdf Output)
 
 If you choose the "Scan To PDF" Sub menu from the top bar Fortify Menu Link, then the same Dialog as "on the fly scan" is shown to the end user, to choose the project to be scanned, and finally .fpr file and the human readable report output is generated on the Desktop with Project Name. The pdf file already contains the issues with issue abstract
 and recommendation to fix them. 
  
- 
+# Issue Ignore List
+
+
  
  
