@@ -1,4 +1,4 @@
-# a custom fortifyplugin for individual development
+# a Custom Eclipse Fortify Plugin for Development
 
 # Introduction
 
