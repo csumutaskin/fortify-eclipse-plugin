@@ -15,9 +15,24 @@ I repeat myself again: "You have to have a physical access to a computer on whic
  * Internet connection for recommendations of the issues. 
  * I mostly develop backend applications in Java, so I parse the issues using the ".java" token especially when detecting the issue locations. This means current tests are done only for Java Backend Projects.
  
-# How to use this plugin:
+# How to install this plugin:
 
 Copy the .jar file in target folder (I excluded target folder and .jar files from .gitignore for a quick installation of the plugin) into Eclipse IDE installation path -> dropins folder and start Eclipse. Fortify custom views and menu items will be visible afterwards.
+
+# How to use this plugin:
+
+This plugin is used to scan a java project base (not individual files in a project) in Eclipse. There are 2 types of scans. 
+
+1- On the fly scan -> uses sourceanalyzer command in the background. Issues detected are written to the custom views in the plugin with brief content (sourceanalyzer is mostly used to log issues summary in devops pipelines, the same utility is used for on the fly scan).
+2- Scan to PDF -> More detailed scan, scan is made and issues along with abstract and reccomendation tips to fix these issues are written to a .pdf file on developer's desktop. (.fpr file is also written to the desktop). But make sure that Fortify SCA/bin is put among Windows PATH variables because ReportGenerator utility is used to create the pdf report.
+
+A scan can be triggered in 2 ways:
+
+1- From the top menu bar There is a new 'Fortify' menu item that will open a sub menu in which scans can be triggered (Both on the fly and pdf output scans are triggered here)
+
+![Trigger Scan Way 1](https://user-images.githubusercontent.com/16647815/158249539-6a84fcd8-2165-4390-b359-5adbe3885f16.png)
+
+
 
 
  
