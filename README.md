@@ -90,6 +90,10 @@ If you choose the "Scan To PDF" Sub menu from the top bar Fortify Menu Link, the
 and recommendation to fix them. 
  
 # Issue Ignore List
+Not all the issues are applicable always. In some scenarios, although there is a security issue detected, because of the origin of the project, it is not a really security issue. In those scenarios, the developer might want to exclude the issue from the output list. Ignore Rule utility comes into the scene. "Ignore List Utility" is, as the name states, if you do not want to see that issue in your issue output report, it is simply omitted (Omitted only for "on the fly scan"). 
+
+There are 4 ways to ignore an issue. All of them are triggered when you right click on any line on the Fortify on the fly custom view. A right mouse click menu appears:
+
 
 
  
