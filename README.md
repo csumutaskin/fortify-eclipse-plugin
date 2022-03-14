@@ -94,7 +94,15 @@ Not all the issues are applicable always. In some scenarios, although there is a
 
 There are 4 ways to ignore an issue. All of them are triggered when you right click on any line on the Fortify on the fly custom view. A right mouse click menu appears:
 
+![Ignore List Right Click Menu](https://user-images.githubusercontent.com/16647815/158262205-6793d519-b6ba-4a95-827e-c4bf881d1790.png)
 
+The explanation of each item on this right click menu is as follows:
+
+* Ignore Line Just Once:
+* Ignore Category Just Once:
+* Ignore Category for this Workspace Projects only:
+* Ignore Category for every Java Project in this computer:
+*
 
  
  
