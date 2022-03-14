@@ -43,6 +43,21 @@ Ctrl + 5 is also a keyboard shortcut to trigger a pdf outputted scan (detailed)
 
 On the fly Scan Results are outputted to a custom view that the plugin provides (When one of the on the fly scan button/links is triggered, this view is automatically opened) In case a manual operation is needed to open the issue output view, use the: Window -> Show View -> Other -> Fortify flow. There will be 3 custom views provided by this plugin.
 
+![Fortify Plugin Custom Views](https://user-images.githubusercontent.com/16647815/158254803-c1a3f901-c7af-435e-ad47-ab61c5a09ae1.png)
+
+When on the fly scan is triggered user is prompted to choose among one of the projects listed in the current workspace:
+
+![image](https://user-images.githubusercontent.com/16647815/158255769-d77a9a6d-c104-43e5-b07b-0e1cc2d8679c.png)
+
+After choosing the project, sourceanalyzer utility runs in the background as an O.S process, developer has to wait until the scan is finished (I plan to add a progress bar of the scan, but the plugin currently does not have it) Whenever the scan is complete, a message dialog is shown to tell the end user that the "scan is done". The issues are outputted to the Fortify on the fly view.
+
+![Message Dialog of Scan Ended](https://user-images.githubusercontent.com/16647815/158256171-4385db3d-8773-4d2e-ac8a-c849e86f1e0d.png)
+
+An example of how detected issues are listed is as follows:
+
+![On the fly scan results](https://user-images.githubusercontent.com/16647815/158256530-26a8a700-a161-490d-8485-0a1664f26af5.png)
+
+By clicking of any of the table column headers, column values are sorted in natural order and reverse natural order (ascending and descending by string letter order).
 
 
 
