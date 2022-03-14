@@ -39,7 +39,7 @@
             commandId="FortifyScanner.commands.toIgnoredRules">
       </handler>
    </extension>
-   <!-- Keyboard Bindings 1- Ctrl+6 for ontheflyCommand -->
+   <!-- Keyboard Bindings 1- Ctrl+4 for ontheflyCommand 2- Ctrl+5 for File output 3- Ctrl+6 Ignored rules list -->
    <extension
          point="org.eclipse.ui.bindings">
       <key
@@ -116,7 +116,7 @@
             name="Fortify On-the-Fly">
       </view>
       <view
-            category="FortifyIssueDetailScanner"
+            category="FortifyScanner"
             class="fortifyscanner.ui.view.FortifyIssueDetailView"
             icon="icons/fortify.png"
             id="fortifyscanner.views.FortifyIssueDetailView"
@@ -124,7 +124,7 @@
             name="Fortify Issue Trace">
       </view>
 	  <view
-            category="VulncatBrowserView"
+            category="FortifyScanner"
             class="fortifyscanner.ui.view.VulncatBrowserView"
             icon="icons/fortify.png"
             id="fortifyscanner.views.VulncatBrowserView"
