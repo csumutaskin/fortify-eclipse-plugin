@@ -41,6 +41,8 @@ Ctrl + 5 is also a keyboard shortcut to trigger a pdf outputted scan (detailed)
 
 ![Toolbar Fortify On the fly Scan Button](https://user-images.githubusercontent.com/16647815/158250483-91c51de2-9263-4339-88cf-0e54d5657bf9.png)
 
+On the fly Scan Results are outputted to a custom view that the plugin provides (When one of the on the fly scan button/links is triggered, this view is automatically opened) In case a manual operation is needed to open the issue output view, use the: Window -> Show View -> Other -> Fortify flow. There will be 3 custom views provided by this plugin.
+
 
 
 
