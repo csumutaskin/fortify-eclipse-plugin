@@ -57,7 +57,18 @@ An example of how detected issues are listed is as follows:
 
 ![On the fly scan results](https://user-images.githubusercontent.com/16647815/158256530-26a8a700-a161-490d-8485-0a1664f26af5.png)
 
-By clicking of any of the table column headers, column values are sorted in natural order and reverse natural order (ascending and descending by string letter order).
+By clicking of any of the table column headers, column values can be sorted in natural order and reverse natural order (ascending and descending by string letter order).
+So, to group issues by severity, developer can click the Severity column.
+
+Columns in this table indicate:
+
+ID: Fortify Issue ID
+Severity: Issue Criticality
+Location: Class and Line Number where the issue is detected (The issue may have a location trace -more than one line- the final line is listed here, detail location trace will
+be given in another custom view called "Fortify Issue Trace" provided by this plugin.)
+Reason: Category
+Description: SubCategory - or more detail
+Type: Analyzer tip
 
 
 
