@@ -72,7 +72,7 @@ public class DBUtils {
 		for(FortifyIssueDto current : givenListBeforeElimination) {
 			String ignoredSubCategory = catSubCatMap.get(current.getReason().trim());
 			if(ignoredSubCategory != null) {
-				if("".equals(ignoredSubCategory) && current.getDescription() == null) {//1st match to remove current rule among all.
+				if("".equals(ignoredSubCategory) && (current.getDescription() == null || "".equals(current.getDescription().trim()))) {//1st match to remove current rule among all.
 					removeList.add(current);	
 				} else if(current.getDescription() != null && ignoredSubCategory.equals(current.getDescription().trim())) {//2nd match to remove current rule among all.
 					removeList.add(current);
