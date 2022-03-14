@@ -32,6 +32,15 @@ A scan can be triggered in 2 ways:
 
 ![Trigger Scan Way 1](https://user-images.githubusercontent.com/16647815/158249539-6a84fcd8-2165-4390-b359-5adbe3885f16.png)
 
+![Sub Menu of Top Fortify Menu Item](https://user-images.githubusercontent.com/16647815/158249834-90817afe-295b-4b8d-9787-e3c5eedf6288.png)
+
+Ctrl + 4 is also a keyboard shortcut to trigger on the fly scan
+Ctrl + 5 is also a keyboard shortcut to trigger a pdf outputted scan (detailed)
+
+2- An on the fly scan can also be triggered using a shortcut button (with Fortify icon) on the toolbar located just below the top menu bar:
+
+![Toolbar Fortify On the fly Scan Button](https://user-images.githubusercontent.com/16647815/158250483-91c51de2-9263-4339-88cf-0e54d5657bf9.png)
+
 
 
 
