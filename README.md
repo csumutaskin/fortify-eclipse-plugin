@@ -112,3 +112,6 @@ The issues that are put to ignore list (workspace wide and user wide) can be see
 (When a scan is made while some rules are in persistent ignore list store, they are never outputted
 to the end user if rescans are made.) 
  
+ # Future Release Plan:
+ 
+ Background Process is time and memory consuming and there is no indicator that it is continuing or stuck at a point, so a progress bar will be added to the corner.
