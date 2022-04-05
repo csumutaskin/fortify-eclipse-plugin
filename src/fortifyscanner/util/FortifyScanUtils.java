@@ -86,7 +86,7 @@ public class FortifyScanUtils {
 			FortifyIssueDto inTurn = new FortifyIssueDto();
 			inTurn.setId(id);
 			inTurn.setDescription(issueDetail.getDescription());
-			inTurn.setLocation(issueDetail.getLocationTrace() != null && issueDetail.getLocationTrace().get(0) != null ? issueDetail.getLocationTrace().get(0).trim() : null);
+			inTurn.setLocation(issueDetail.getLocationTrace() != null && !issueDetail.getLocationTrace().isEmpty() && issueDetail.getLocationTrace().get(0) != null ? issueDetail.getLocationTrace().get(0).trim() : null);
 			inTurn.setLocationTrace(issueDetail.getLocationTrace());
 			inTurn.setReason(issueDetail.getReason());
 			inTurn.setSeverity(issueDetail.getSeverity());
@@ -105,6 +105,9 @@ public class FortifyScanUtils {
 	public static String parseAndGroupReportData(String id, String line) {
 		
 		if(line == null || "".equals(line.trim())) { //reset issue id on new source analyzer group
+			if(id != null && (parsedReport.get(id) == null || parsedReport.get(id).getLocationTrace().isEmpty())) {
+				return id;
+			}
 			return null;
 		}
 		//line = line.trim();
