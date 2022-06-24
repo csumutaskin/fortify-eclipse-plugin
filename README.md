@@ -17,7 +17,8 @@ I repeat myself again: "You have to have a physical access to a computer on whic
  
 # How to install this plugin:
 
-Copy the .jar file in target folder (I excluded target folder and .jar files from .gitignore for a quick installation of the plugin) into Eclipse IDE installation path -> dropins folder and start Eclipse. Fortify custom views and menu items will be visible afterwards.
+First make sure that your IDE runtime environment is at least Java 17. 
+Then copy the .jar file in target folder (I excluded target folder and .jar files from .gitignore for a quick installation of the plugin) into Eclipse IDE installation path -> dropins folder and start Eclipse. Fortify custom views and menu items will be visible afterwards.
 
 # How to use this plugin:
 
