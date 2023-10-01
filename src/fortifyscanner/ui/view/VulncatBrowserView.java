@@ -1,10 +1,15 @@
 package fortifyscanner.ui.view;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.ProgressAdapter;
+import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
 
 import fortifyscanner.util.ConsoleUtils;
@@ -30,7 +35,23 @@ public class VulncatBrowserView extends ViewPart {
 	 */
 	@Override
 	public void createPartControl(Composite frame) {
-		browser = new Browser(frame, SWT.NONE);
+		browser = new Browser(frame, SWT.NONE);	
+		browser.addProgressListener( new ProgressAdapter() {
+			  @Override
+			  public void completed( ProgressEvent event ) {				
+			    String text = browser.getText();
+			    String url = browser.getUrl();
+			    if(url.endsWith("+")) {
+			    	url = url.substring(0, url.length() - 1);
+			    }
+			    String[] split = text.split("Weaknesses");
+			    if(split != null && split.length > 0) {
+			    	String summary = "<h3>Detail in: \"" +  url + "\"</h3>" + split[1];
+			    	browser.setText(summary);
+			    	browser.setVisible(true);
+			    }
+			  }
+			} );
 	}
 	
 	/**
@@ -50,6 +71,7 @@ public class VulncatBrowserView extends ViewPart {
 		LOGGER.info("Internal Browser is browsing URL: " + URL);
 		ConsoleUtils.printMessageToConsoleWithNameConsole("Fortify Vulncat Browser is querying URL: " + URL);
 		browser.setUrl(URL);
+		browser.setVisible(false);
 	}
 	
 	/**
@@ -64,6 +86,7 @@ public class VulncatBrowserView extends ViewPart {
 		category = category.trim().replaceAll("\\s+", "+");
 		String urlPostFix = "";
 		if(subCategory != null && !"".equals(subCategory.trim())) {
+			subCategory = URLEncoder.encode(subCategory, StandardCharsets.UTF_8);
 			urlPostFix = "&q=" + subCategory.trim(); 
 		}
 		String URL = VULNCAT_QUERY_URL + "?" + VULNCAT_CATEGORY_QUERY_PARAM +"=" + category + urlPostFix;		
